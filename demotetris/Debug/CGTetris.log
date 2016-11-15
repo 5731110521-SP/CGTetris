@@ -1,3 +1,5 @@
-﻿  board.cpp
+﻿  main.cpp
+main.cpp(123): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+main.cpp(333): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
   CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.exe
   CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.pdb (Full PDB)
