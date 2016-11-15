@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <set>
+#include <map>
 #include <stdlib.h>
 #include <vector>
 #include <time.h>
@@ -45,6 +46,14 @@ GLuint _textureId;
 GLfloat red[] = { 1,0,0 };
 GLfloat green[] = { 0,1,0 };
 GLfloat blue[] = { 0,0,1 };
+GLfloat yellow[] = { 0.5,0,0 };
+GLfloat pink[] = { 0.5,0,0.5 };
+GLfloat purple[] = { 1,0,1 };
+GLfloat brown[] = { 0,1,1 };
+GLfloat gray[] = { 0.4,0.4,0.4 };
+map<int,GLfloat*> col;
+//col["red"]=&red,col["green"]=&green,col["blue"]=&blue,col["yellow"]=&yellow,
+//col["pink"]=&pink,col["purple"]=&purple,col["brown"]=&brown,col["gray"]=&gray;
 
 void createBlock(int random,Block block) {
 	if (random == 0) { // ---
@@ -55,7 +64,7 @@ void createBlock(int random,Block block) {
 		board.currentPointRow = 0;
 		board.currentPointColumn = 3;
 	}
-	else if (random == 1) {				// - 
+	else if (random == 1) {				// -
 		board.addblocks(block, 2, 1);	// ---
 		board.addblocks(block, 2, 2);
 		board.addblocks(block, 2, 3);
@@ -139,12 +148,11 @@ void handleArrow(int key,int x,int y) {
 	if (key == GLUT_KEY_DOWN) {
 		if (!board.currentColumn.empty()) {
 			if (!board.movedown()) {
-				Block block = Block('t', blue, Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-
 				random_shuffle(typeBlock.begin(), typeBlock.end());
 				random = rand() % 12;
 				if (typeBlock[random] != choose) choose = typeBlock[random];
 				else choose = typeBlock[random / 2];
+				Block block = Block('c', col[choose], Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
 				createBlock(choose, block);
 			}
 
@@ -200,6 +208,8 @@ void initRendering() {
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
 	glEnable(GL_NORMALIZE);
+	col[0]=red,col[1]=green,col[2]=blue,col[3]=yellow,
+    col[4]=pink,col[5]=purple,col[6]=brown,col[7]=gray;
 	Vec3f pos = Vec3f(8 * randomFloat() - 4,
                           5,
                           8 * randomFloat() - 4);
@@ -266,7 +276,7 @@ void drawScene() {
 	glLoadIdentity();
 
 	setUplighting();
-	glTranslatef(0,0,-70);
+	glTranslatef(0,0,-100);
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/watertexture.bmp");
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/crate.bmp");
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/brick.bmp");
@@ -314,7 +324,7 @@ void drawScene() {
 	*/
 
 //	DrawBorder();
-	int k = 0;
+	int k = 0,sh=0;
 	for (int i = 0; i < 20; i++) {
 		for (int j = 0; j < 10; j++) {
             glBegin(GL_QUADS);
@@ -329,8 +339,18 @@ void drawScene() {
 				k++;
 				glPushMatrix();
 				Block b = board.blocks[i][j];
-				b.color=blue;
-				glTranslatef(j*2-5,-i*2+17,0);    //set initial location
+				glTranslatef(j*2-5,-i*2+17,0);    //calculate location
+				glRotatef(0, 1, 0, 0);
+				glRotatef(0, 0, 1, 0);
+				glRotatef(0, 0, 0, 1);
+				b.drawCube('c', 0, 0, 0);
+				glPopMatrix();
+
+				glPushMatrix(); sh=i;  //i=row j=col
+				b = board.blocks[i][j];
+				while(!board.board[sh][j] && -sh*2+17>=-22) sh++;
+				b.color=gray;
+				glTranslatef(j*2-5,-sh*2+17,0);    //calculate location
 				glRotatef(0, 1, 0, 0);
 				glRotatef(0, 0, 1, 0);
 				glRotatef(0, 0, 0, 1);
@@ -346,8 +366,8 @@ void drawScene() {
 void update(int value) {
 	if (!board.currentColumn.empty()) {
 		if (!board.movedown()) {
-			Block block = Block('t', blue,Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-			random = rand() % 5;
+            random = rand() % 5;
+			Block block = Block('c', col[random],Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
 			createBlock(random, block);
 		}
 

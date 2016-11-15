@@ -318,7 +318,7 @@
 	<_mingw.h>
 	<stddef.h>
 
-1479207967 source:d:\_fang\year 3\cg\cgtetris\demotetris\block.cpp
+1479232274 source:d:\_fang\year 3\cg\cgtetris\demotetris\block.cpp
 	<assert.h>
 	<fstream>
 	<GL/glut.h>
@@ -326,7 +326,7 @@
 	"vec3f.h"
 	"modelloader.h"
 
-1479207948 d:\_fang\year 3\cg\cgtetris\demotetris\block.h
+1479212823 d:\_fang\year 3\cg\cgtetris\demotetris\block.h
 	<GL/glut.h>
 	"vec3f.h"
 	"modelloader.h"
@@ -363,12 +363,14 @@
 	<math.h>
 	"vec3f.h"
 
-1479210769 source:d:\_fang\year 3\cg\cgtetris\demotetris\main.cpp
+1479234198 source:d:\_fang\year 3\cg\cgtetris\demotetris\main.cpp
 	<iostream>
+	<algorithm>
 	<cmath>
 	<cstdlib>
 	<ctime>
 	<set>
+	<map>
 	<stdlib.h>
 	<vector>
 	<time.h>
@@ -381,7 +383,7 @@
 	"block.h"
 	"board.h"
 
-1479193491 d:\_fang\year 3\cg\cgtetris\demotetris\board.h
+1479230283 d:\_fang\year 3\cg\cgtetris\demotetris\board.h
 	<iostream>
 	<cmath>
 	<cstdlib>
@@ -392,7 +394,7 @@
 	<time.h>
 	"block.h"
 
-1479193491 source:d:\_fang\year 3\cg\cgtetris\demotetris\board.cpp
+1479230283 source:d:\_fang\year 3\cg\cgtetris\demotetris\board.cpp
 	<vector>
 	"board.h"
 	"block.h"
