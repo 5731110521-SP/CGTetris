@@ -96,12 +96,30 @@ void handleKeypress(unsigned char key,int x,int y) {
 		glutPostRedisplay();
 	}
 	if (key == '1') {
-		board.moveblock(-1);
-		glutPostRedisplay();
+		if (!board.currentColumn.empty()) {
+			board.moveblock(-1);
+			glutPostRedisplay();
+		}
 	}
 	if (key == '2') {
-		board.moveblock(1);
-		glutPostRedisplay();
+		if (!board.currentColumn.empty()) {
+			board.moveblock(1);
+			glutPostRedisplay();
+		}
+	}
+	if (key == '3') {
+		if (!board.currentColumn.empty()) {
+			if (!board.movedown()) {
+				Block block = Block('t', Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
+				board.addblocks(block, 0, 4);
+				board.addblocks(block, 0, 5);
+				board.addblocks(block, 1, 5);
+				board.addblocks(block, 1, 6);
+			}
+
+			board.update();
+			glutPostRedisplay();
+		}
 	}
 }
 GLuint loadTexture(Image* image) {
