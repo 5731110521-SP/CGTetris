@@ -51,48 +51,64 @@ void createBlock(int random,Block block) {
 		board.addblocks(block, 1, 4);
 		board.addblocks(block, 1, 5);
 		board.addblocks(block, 1, 6);
+		board.currentPointRow = 0;
+		board.currentPointColumn = 3;
 	}
 	else if (random == 1) {				// - 
 		board.addblocks(block, 2, 1);	// ---
 		board.addblocks(block, 2, 2);
 		board.addblocks(block, 2, 3);
 		board.addblocks(block, 1, 1);
+		board.currentPointRow = 0;
+		board.currentPointColumn = 0;
 	}
 	else if (random == 2) {				// --
 		board.addblocks(block, 1, 1);	// --
 		board.addblocks(block, 1, 2);
 		board.addblocks(block, 2, 1);
 		board.addblocks(block, 2, 2);
+		board.currentPointRow = 0;
+		board.currentPointColumn = 0;
 	}
 	else if (random == 3) {				//  -
 		board.addblocks(block, 1, 1);	// ---
 		board.addblocks(block, 1, 2);
 		board.addblocks(block, 1, 3);
 		board.addblocks(block, 2, 3);
+		board.currentPointRow = 0;
+		board.currentPointColumn = 0;
 	}
 	else if (random == 4) {				//  --
 		board.addblocks(block, 2, 2);	//--
 		board.addblocks(block, 2, 3);
 		board.addblocks(block, 1, 1);
 		board.addblocks(block, 1, 2);
+		board.currentPointRow = 0;
+		board.currentPointColumn = 0;
 	}
 	else if (random == 5) {				//--
 		board.addblocks(block, 2, 1);	//  --
 		board.addblocks(block, 2, 2);
 		board.addblocks(block, 1, 2);
 		board.addblocks(block, 1, 3);
+		board.currentPointRow = 0;
+		board.currentPointColumn = 0;
 	}
 	else if(random == 6){
 		board.addblocks(block, 2, 2);	//  -
 		board.addblocks(block, 2, 3);	//---
 		board.addblocks(block, 2, 4);
 		board.addblocks(block, 1, 4);
+		board.currentPointRow = 0;
+		board.currentPointColumn = 0;
 	}
 	else {
 		board.addblocks(block, 1, 1);	//  -
 		board.addblocks(block, 2, 1);	//  -
 		board.addblocks(block, 3, 1);	//  -
 		board.addblocks(block, 4, 1);	//  -
+		board.currentPointRow = 1;
+		board.currentPointColumn = 0;
 	}
 //	board.addblocks(block, 0, 4);
 //	board.addblocks(block, 0, 5);
@@ -150,19 +166,11 @@ void handleKeypress(unsigned char key,int x,int y) {
     }
 	if (key == 's') {
 		Block block = Block('t', Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-<<<<<<< HEAD
-		board.addblocks(block, 0, 4);
-		board.addblocks(block, 0, 5);
-		board.addblocks(block, 1, 5);
-		board.addblocks(block, 1, 6);
-		board.currentPointRow = -1;
-		board.currentPointColumn = 4;
-		glutPostRedisplay();
-=======
+
 		random_shuffle(typeBlock.begin(),typeBlock.end());
 		random = rand() % 12;
 		createBlock(typeBlock[random],block);
->>>>>>> refs/remotes/origin/TAEW
+		glutPostRedisplay();
 	}
 	if (key == '1') {
 		if (!board.currentColumn.empty()) {
@@ -180,20 +188,12 @@ void handleKeypress(unsigned char key,int x,int y) {
 		if (!board.currentColumn.empty()) {
 			if (!board.movedown()) {
 				Block block = Block('t', Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-<<<<<<< HEAD
-				board.addblocks(block, 0, 4);
-				board.addblocks(block, 0, 5);
-				board.addblocks(block, 1, 5);
-				board.addblocks(block, 1, 6);
-				board.currentPointRow = -1;
-				board.currentPointColumn = 4;
-=======
+
 				random_shuffle(typeBlock.begin(), typeBlock.end());
 				random = rand() % 12;
 				if (typeBlock[random] != choose) choose = typeBlock[random];
 				else choose = typeBlock[random/2];
 				createBlock(choose, block);
->>>>>>> refs/remotes/origin/TAEW
 			}
 
 			board.update();
@@ -424,17 +424,10 @@ void update(int value) {
 	if (!board.currentColumn.empty()) {
 		if (!board.movedown()) {
 			Block block = Block('t', Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-<<<<<<< HEAD
-			board.addblocks(block, 0, 4);
-			board.addblocks(block, 0, 5);
-			board.addblocks(block, 1, 5);
-			board.addblocks(block, 1, 6);
-			board.currentPointRow = -1;
-			board.currentPointColumn = 4;
-=======
+
 			random = rand() % 5;
 			createBlock(random, block);
->>>>>>> refs/remotes/origin/TAEW
+
 		}
 
 		board.update();
