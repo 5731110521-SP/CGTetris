@@ -130,108 +130,53 @@ void cleanup() {
 //	}
 }
 void handleArrow(int key,int x,int y) {
-<<<<<<< HEAD
-    if (key == GLUT_KEY_LEFT) updateT(-2, 0, 0);
-	if (key == GLUT_KEY_DOWN) updateT(0, -2, 0);
-	if (key == GLUT_KEY_RIGHT) updateT(2, 0, 0);
-	if (key == GLUT_KEY_UP) updateT(0, 2, 0);
-}
-
-void handleKeypress(unsigned char key,int x,int y) {
-    if (key == 27) { cleanup(); exit(0); }
-    if (key == 'z') updateR(90, 'x');
-    if (key == 'x') updateR(90, 'y');
-    if (key == 'c') updateR(90, 'z');
-    if (key == '.') updateT(0,0,-2);
-    if (key == '\/') updateT(0,0,2);
-    if (key == 'n') {
-        current++;
-        Vec3f pos = Vec3f(8 * randomFloat() - 4,
-                          5,
-                          8 * randomFloat() - 4);
-        Block block = Block('t',pos,Vec3f(0,0,0),t_model);
-        _blocks.push_back(block);
-    }
-	if (key == 's') {
-		Block block = Block('t', Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-
-		random_shuffle(typeBlock.begin(),typeBlock.end());
-		random = rand() % 12;
-		createBlock(typeBlock[random],block);
-		glutPostRedisplay();
-	}
-	if (key == '1') {
+	if (key == GLUT_KEY_LEFT) {
 		if (!board.currentColumn.empty()) {
 			board.moveblock(-1);
 			glutPostRedisplay();
 		}
 	}
-	if (key == '2') {
-		if (!board.currentColumn.empty()) {
-			board.moveblock(1);
-			glutPostRedisplay();
-		}
-	}
-	if (key == '3') {
+	if (key == GLUT_KEY_DOWN) {
 		if (!board.currentColumn.empty()) {
 			if (!board.movedown()) {
-				Block block = Block('t', Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
+				Block block = Block('t', blue, Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
 
 				random_shuffle(typeBlock.begin(), typeBlock.end());
 				random = rand() % 12;
 				if (typeBlock[random] != choose) choose = typeBlock[random];
-				else choose = typeBlock[random/2];
+				else choose = typeBlock[random / 2];
 				createBlock(choose, block);
-=======
-    if (key == GLUT_KEY_LEFT) {
-        if (!board.currentColumn.empty()) {
-            board.moveblock(-1);
-            glutPostRedisplay();
-		}
-    }
-	if (key == GLUT_KEY_DOWN) {
-        if (!board.currentColumn.empty()) {
-			if (!board.movedown()) {                //create new wave
-				Block block = Block('t', blue,Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-				board.addblocks(block, 0, 4);       //z shape
-				board.addblocks(block, 0, 5);
-				board.addblocks(block, 1, 5);
-				board.addblocks(block, 1, 6);
->>>>>>> refs/remotes/origin/GIZ
 			}
 
 			board.update();
 			glutPostRedisplay();
 		}
 	}
-<<<<<<< HEAD
-	if (key == '4') {
+	if (key == GLUT_KEY_RIGHT) {
+		if (!board.currentColumn.empty()) {
+			board.moveblock(1);
+			glutPostRedisplay();
+		}
+	}
+	if (key == GLUT_KEY_UP) {
 		if (!board.currentColumn.empty()) {
 			board.rotateBlock();
 			glutPostRedisplay();
 		}
 	}
-=======
-	if (key == GLUT_KEY_RIGHT) {
-        if (!board.currentColumn.empty()) {
-			board.moveblock(1);
-			glutPostRedisplay();
-		}
-	}
-	if (key == GLUT_KEY_UP) {  }
 }
+
 void handleKeypress(unsigned char key,int x,int y) {
     if (key == 27) { cleanup(); exit(0); }
-	if (key == 's') {                           //create new block
-		Block block = Block('t', blue,Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-		board.addblocks(block, 0, 4);           //z shape
-		board.addblocks(block, 0, 5);
-		board.addblocks(block, 1, 5);
-		board.addblocks(block, 1, 6);
+	if (key == 's') {
+		Block block = Block('t', blue, Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
+		random_shuffle(typeBlock.begin(),typeBlock.end());
+		random = rand() % 12;
+		createBlock(typeBlock[random],block);
 		glutPostRedisplay();
 	}
->>>>>>> refs/remotes/origin/GIZ
 }
+
 GLuint loadTexture(Image* image) {
 	GLuint textureId;
 	glGenTextures(1, &textureId); //Make room for our texture
@@ -401,19 +346,9 @@ void drawScene() {
 void update(int value) {
 	if (!board.currentColumn.empty()) {
 		if (!board.movedown()) {
-<<<<<<< HEAD
-			Block block = Block('t', Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-
+			Block block = Block('t', blue,Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
 			random = rand() % 5;
 			createBlock(random, block);
-
-=======
-			Block block = Block('t', blue,Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-			board.addblocks(block, 0, 4);
-			board.addblocks(block, 0, 5);
-			board.addblocks(block, 1, 5);
-			board.addblocks(block, 1, 6);
->>>>>>> refs/remotes/origin/GIZ
 		}
 
 		board.update();
