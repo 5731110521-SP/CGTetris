@@ -1,9 +1,9 @@
 ﻿  main.cpp
-main.cpp(40): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
-main.cpp(40): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
-main.cpp(45): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-main.cpp(81): warning C4129: '/': unrecognized character escape sequence
-main.cpp(303): warning C4018: '<': signed/unsigned mismatch
-main.cpp(325): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-  CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.exe
-  CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.pdb (Full PDB)
+main.cpp(45): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+main.cpp(45): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+main.cpp(106): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+main.cpp(142): warning C4129: '/': unrecognized character escape sequence
+main.cpp(363): warning C4018: '<': signed/unsigned mismatch
+main.cpp(385): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+  CGtetris.vcxproj -> C:\Users\UEFI\Documents\GitHub\CGTetris\demotetris\Debug\CGtetris.exe
+  CGtetris.vcxproj -> C:\Users\UEFI\Documents\GitHub\CGTetris\demotetris\Debug\CGtetris.pdb (Full PDB)
