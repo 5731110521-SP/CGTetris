@@ -50,9 +50,9 @@ bool Board::canmoveblock(int row, int column)
 {
 	for (int i = 0; i < 4; i++) {
 		//if (board[currentRow[i] + row][currentColumn[i] + column] && !onCurrent(currentRow[i] + row, currentColumn[i] + column)) return false;
-		if (board[currentRow[i] + row][currentColumn[i] + column]
-			|| currentRow[i] + row<0|| currentRow[i] + row >=20
-			|| currentColumn[i] + column<0|| currentColumn[i] + column >=10) return false;
+		if (currentRow[i] + row<0|| currentRow[i] + row >=20
+			|| currentColumn[i] + column<0|| currentColumn[i] + column >=10
+			|| board[currentRow[i] + row][currentColumn[i] + column]) return false;
 	}
 	return true;
 }
@@ -78,6 +78,7 @@ void Board::moveblock(int column) //left=-1 right=1
 					blocks[i][j-1] = blocks[i][j];
 					k++;
 					if (k >= 4) {
+						currentPointColumn -= 1;
 						for (int i = 0; i < 4; i++) currentColumn[i] -= 1;
 						return;
 					}
@@ -95,6 +96,7 @@ void Board::moveblock(int column) //left=-1 right=1
 					blocks[i][j + 1] = blocks[i][j];
 					k++;
 					if (k >= 4) {
+						currentPointColumn += 1;
 						for (int i = 0; i < 4; i++) currentColumn[i] += 1;
 						return;
 					}
@@ -102,6 +104,40 @@ void Board::moveblock(int column) //left=-1 right=1
 			}
 		}
 	}
+}
+
+pair<int, int> Board::getRotateTo(int row, int column)
+{
+	return make_pair(0 + column, 3 - row);
+}
+
+bool Board::canRotateBlock()
+{
+	for (int i = 0; i < 4; i++) {
+		pair<int, int> rc = getRotateTo(currentRow[i]-currentPointRow, currentColumn[i]-currentPointColumn);
+		if (rc.first + currentPointRow<0 || rc.first + currentPointRow>=20 
+			|| rc.second + currentPointColumn<0 || rc.second + currentPointColumn>=10
+			|| board[rc.first+currentPointRow][rc.second+currentPointColumn]) return false;
+	}
+	return true;
+}
+
+void Board::rotateBlock()
+{
+	if (!canRotateBlock()) return;
+
+	for (int i = 0; i < 4; i++) {
+		boardCurrent[currentRow[i]][currentColumn[i]] = false;
+		pair<int, int> rc = getRotateTo(currentRow[i] - currentPointRow, currentColumn[i] - currentPointColumn);
+		blocks[rc.first + currentPointRow][rc.second + currentPointColumn] = blocks[currentRow[i]][currentColumn[i]];
+		currentRow[i] = rc.first + currentPointRow;
+		currentColumn[i] = rc.second + currentPointColumn;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		boardCurrent[currentRow[i]][currentColumn[i]] = true;
+	}
+
 }
 
 bool Board::movedown()
@@ -134,6 +170,7 @@ bool Board::movedown()
 				blocks[i + 1][j] = blocks[i][j];
 				k++;
 				if (k >= 4) {
+					currentPointRow += 1;
 					for (int i = 0; i < 4;i++) currentRow[i] += 1;
 					return true;
 				}

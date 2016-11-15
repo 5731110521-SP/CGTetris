@@ -18,6 +18,8 @@ class Board {
 	bool board[20][10]; //have something on board?
 	bool boardCurrent[20][10];
 	Block blocks[20][10]; //blocks on the board
+	int currentPointRow;
+	int currentPointColumn;
 	vector<int> currentRow;
 	vector<int> currentColumn;
 
@@ -27,6 +29,11 @@ class Board {
 	bool onCurrent(int row, int column);
 	bool canmoveblock(int row,int column);
 	void moveblock(int left);
+
+	pair<int, int> getRotateTo(int row, int column);
+	bool canRotateBlock();
+	void rotateBlock();
+
 	bool movedown();
 	void update();
 };

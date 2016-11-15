@@ -93,6 +93,8 @@ void handleKeypress(unsigned char key,int x,int y) {
 		board.addblocks(block, 0, 5);
 		board.addblocks(block, 1, 5);
 		board.addblocks(block, 1, 6);
+		board.currentPointRow = -1;
+		board.currentPointColumn = 4;
 		glutPostRedisplay();
 	}
 	if (key == '1') {
@@ -115,9 +117,17 @@ void handleKeypress(unsigned char key,int x,int y) {
 				board.addblocks(block, 0, 5);
 				board.addblocks(block, 1, 5);
 				board.addblocks(block, 1, 6);
+				board.currentPointRow = -1;
+				board.currentPointColumn = 4;
 			}
 
 			board.update();
+			glutPostRedisplay();
+		}
+	}
+	if (key == '4') {
+		if (!board.currentColumn.empty()) {
+			board.rotateBlock();
 			glutPostRedisplay();
 		}
 	}
@@ -343,6 +353,8 @@ void update(int value) {
 			board.addblocks(block, 0, 5);
 			board.addblocks(block, 1, 5);
 			board.addblocks(block, 1, 6);
+			board.currentPointRow = -1;
+			board.currentPointColumn = 4;
 		}
 
 		board.update();
