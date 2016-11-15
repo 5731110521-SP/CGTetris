@@ -81,7 +81,6 @@ void handleArrow(int key,int x,int y) {
 	}
 	if (key == GLUT_KEY_UP) {  }
 }
-
 void handleKeypress(unsigned char key,int x,int y) {
     if (key == 27) { cleanup(); exit(0); }
 	if (key == 's') {                           //create new block
@@ -123,19 +122,21 @@ void initRendering() {
 //	//Block block = Block('t', Vec3f(0,9,8), Vec3f(0, 0, 0), t_model);
 //    _blocks.push_back(block);
 }
-void DrawAxes() {
+void DrawBorder() {
     glBegin(GL_LINES);
         glColor3f(1,0,0);
-        glVertex3f(0,0,0);
-        glVertex3f(5,0,0);
+        glVertex3f(-6,-18,0);
+        glVertex3f(-6,18,0);
 
-        glColor3f(0,0,1);
-        glVertex3f(0,0,0);
-        glVertex3f(0,0,5);
+        glVertex3f(6,-18,0);
+        glVertex3f(6,18,0);
 
-        glColor3f(0,1,0);
-        glVertex3f(0,0,0);
-        glVertex3f(0,5,0);
+        glVertex3f(-6,-18,0);
+        glVertex3f(6,-18,0);
+
+        glVertex3f(-6,18,0);
+        glVertex3f(6,18,0);
+
     glEnd();
 }
 void handleResize(int w, int h) {
@@ -227,9 +228,17 @@ void drawScene() {
 	}
 	*/
 
+//	DrawBorder();
 	int k = 0;
 	for (int i = 0; i < 20; i++) {
 		for (int j = 0; j < 10; j++) {
+            glBegin(GL_QUADS);
+            glColor3f(1,1,1);
+            glVertex3f(-6,18,0);
+            glVertex3f(14,18,0);
+            glVertex3f(14,-22,0);
+            glVertex3f(-6,-22,0);
+            glEnd();
 			if (board.board[i][j] || board.boardCurrent[i][j]) {
 				cout << k<< " " <<i << " " << j << endl;
 				k++;
