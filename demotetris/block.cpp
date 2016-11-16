@@ -14,17 +14,6 @@ Block::~Block() {
 	model.Model_OBJ::Release();
 }
 
-//void Block::addAngle(char axis,float a) {
-//    if(axis=='x') angle[0]+=a;
-//    else if(axis=='y') angle[1]+=a;
-//    else angle[2]+=a;
-//}
-//void Block::addPos(Vec3f p) {
-//    pos[0]+=p[0];
-//    pos[1]+=p[1];
-//    pos[2]+=p[2];
-//}
-
 void Block::drawRect(char type,float a,float rx,float ry,float rz) {
 	glPushMatrix();
 	glRotatef(a, rx, ry, rz);
@@ -57,4 +46,3 @@ void Block::drawCube(char type) {
 	drawRect(type,-90, 0, 1, 0);
 	glPopMatrix();
 }
-
