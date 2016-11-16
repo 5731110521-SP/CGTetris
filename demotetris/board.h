@@ -13,13 +13,16 @@
 
 using namespace std;
 
-class Board { 
+class Board {
   public:
 	bool board[20][10]; //have something on board?
 	bool boardCurrent[20][10];
+//	bool boardShadow[20][10];
 	Block blocks[20][10]; //blocks on the board
 	int currentPointRow;
 	int currentPointColumn;
+//	vector<int> shadowrow;
+//	vector<int> shadowcolumn;
 	vector<int> currentRow;
 	vector<int> currentColumn;
 

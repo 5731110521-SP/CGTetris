@@ -25,6 +25,19 @@ void Board::addblocks(Block b, int row, int column)
 	currentRow.push_back(row);
 	currentColumn.push_back(column);
 
+//	boardShadow[row][column]=true;
+//	shadowrow.push_back(row);
+//    shadowcolumn.push_back(column);
+
+	//add shadow
+//	int nrow=row;
+//    while(nrow<19&&!board[nrow+1][column]) nrow++;
+//    boardShadow[row][column]=false;
+//    boardShadow[nrow][column]=true;
+//    blocks[nrow][column]=b;
+//	shadowrow.pop_back();
+//    shadowrow.push_back(nrow);
+
 	for (int i = 0; i < 20; i++) {
 		for (int j = 0; j < 10; j++) cout << boardCurrent[i][j] << " ";
 		cout << endl;
@@ -56,7 +69,6 @@ bool Board::canmoveblock(int row, int column)
 	}
 	return true;
 }
-
 void Board::moveblock(int column) //left=-1 right=1
 {
 	if (!canmoveblock(0,column)) return;
@@ -115,7 +127,7 @@ bool Board::canRotateBlock()
 {
 	for (int i = 0; i < 4; i++) {
 		pair<int, int> rc = getRotateTo(currentRow[i]-currentPointRow, currentColumn[i]-currentPointColumn);
-		if (rc.first + currentPointRow<0 || rc.first + currentPointRow>=20 
+		if (rc.first + currentPointRow<0 || rc.first + currentPointRow>=20
 			|| rc.second + currentPointColumn<0 || rc.second + currentPointColumn>=10
 			|| board[rc.first+currentPointRow][rc.second+currentPointColumn]) return false;
 	}
@@ -177,7 +189,7 @@ bool Board::movedown()
 			}
 		}
 	}
-	
+
 	return true;
 }
 

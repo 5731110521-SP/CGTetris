@@ -36,7 +36,6 @@ int current=0;
 int random = 0;
 vector<int> typeBlock = { 0,1,1,2,3,3,4,4,5,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
-int box[WIDTH][HEIGHT][DEPTH];
 vector<Block> _blocks;
 Model_OBJ t_model,l_model;
 int _axis;
@@ -51,9 +50,9 @@ GLfloat pink[] = { 0.5,0,0.5 };
 GLfloat purple[] = { 1,0,1 };
 GLfloat brown[] = { 0,1,1 };
 GLfloat gray[] = { 0.4,0.4,0.4 };
+GLfloat shadow[] = { 0.7,0.7,0.7 };
 map<int,GLfloat*> col;
-//col["red"]=&red,col["green"]=&green,col["blue"]=&blue,col["yellow"]=&yellow,
-//col["pink"]=&pink,col["purple"]=&purple,col["brown"]=&brown,col["gray"]=&gray;
+int speed=1000; bool space=false;
 
 void createBlock(int random,Block block) {
 	if (random == 0) { // ---
@@ -152,7 +151,7 @@ void handleArrow(int key,int x,int y) {
 				random = rand() % 12;
 				if (typeBlock[random] != choose) choose = typeBlock[random];
 				else choose = typeBlock[random / 2];
-				Block block = Block('c', col[choose], Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
+				Block block = Block(col[choose]);
 				createBlock(choose, block);
 			}
 
@@ -173,18 +172,24 @@ void handleArrow(int key,int x,int y) {
 		}
 	}
 }
-
 void handleKeypress(unsigned char key,int x,int y) {
-    if (key == 27) { cleanup(); exit(0); }
+    if (key == 27) exit(0);
+    if (key == 32) space=true;
 	if (key == 's') {
-		Block block = Block('t', blue, Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-		random_shuffle(typeBlock.begin(),typeBlock.end());
-		random = rand() % 12;
-		createBlock(typeBlock[random],block);
+		random_shuffle(typeBlock.begin(), typeBlock.end());
+        random = rand() % 12;
+        if (typeBlock[random] != choose) choose = typeBlock[random];
+        else choose = typeBlock[random / 2];
+        Block block = Block(col[choose]);
+        createBlock(choose, block);
 		glutPostRedisplay();
 	}
 }
+void handleMouse(int button,int state,int x,int y) {
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 
+    }
+}
 GLuint loadTexture(Image* image) {
 	GLuint textureId;
 	glGenTextures(1, &textureId); //Make room for our texture
@@ -218,21 +223,28 @@ void initRendering() {
 //    _blocks.push_back(block);
 }
 void DrawBorder() {
-    glBegin(GL_LINES);
-        glColor3f(1,0,0);
-        glVertex3f(-6,-18,0);
+//    glBegin(GL_LINES);
+        glBegin(GL_QUADS);
+        glColor3f(1,1,1);
         glVertex3f(-6,18,0);
+        glVertex3f(14,18,0);
+        glVertex3f(14,-22,0);
+        glVertex3f(-6,-22,0);
+        glEnd();
 
-        glVertex3f(6,-18,0);
-        glVertex3f(6,18,0);
-
-        glVertex3f(-6,-18,0);
-        glVertex3f(6,-18,0);
-
-        glVertex3f(-6,18,0);
-        glVertex3f(6,18,0);
-
-    glEnd();
+//        for(int i=0; i<20; i++) for(int j=0; j<10; j++) {
+//            if(i==0||i==19||j==0||j==9) {
+//                glPushMatrix();
+//                Block b = Block(gray);
+//                if(i==0) glTranslatef(j*2-5,19,0);
+//                else if(i==19) glTranslatef(j*2-5,-23,0);
+//                else if(j==0) glTranslatef(-7,-i*2+17,0);
+//                else glTranslatef(15,-i*2+17,0);
+//                b.drawCube('t');
+//                glPopMatrix();
+//            }
+//        }
+//    glEnd();
 }
 void handleResize(int w, int h) {
     	//Tell OpenGL how to convert from coordinates to pixel values
@@ -276,87 +288,33 @@ void drawScene() {
 	glLoadIdentity();
 
 	setUplighting();
-	glTranslatef(0,0,-100);
+	glTranslatef(0,0,-70);
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/watertexture.bmp");
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/crate.bmp");
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/brick.bmp");
 //	setUptexture("texture/brick.bmp");
 
-	cout<<"current "<<current<<endl;
-	cout<<"num block "<<_blocks.size()<<endl;
-
-	/*      model giz
-	for(int i=0; i<_blocks.size(); i++) {
-        cout<<"push"<<endl;
-        glPushMatrix();
-        glTranslatef(_blocks[i].getPos('x'),
-                     _blocks[i].getPos('y'),
-                     _blocks[i].getPos('z'));
-        cout<<"translated"<<endl;
-        glRotatef(_blocks[i].getAngle('x'),1,0,0);
-        glRotatef(_blocks[i].getAngle('y'),0,1,0);
-        glRotatef(_blocks[i].getAngle('z'),0,0,1);
-        cout<<"rotated"<<endl;
-        if(_blocks[i].getType()=='t') _blocks[i].setModel(t_model);
-        if(_blocks[i].getType()=='l') _blocks[i].setModel(l_model);
-        cout<<"model set"<<endl;
-        _blocks[i].getModel().Draw();
-    //        if(b.getModel()==t_model) cout<<"correct model"<<endl;
-        cout<<"pop"<<endl;
-        glPopMatrix();
-	}
-    */
-
-	/*      texture/color giz
-	for(int i=0; i<_blocks.size(); i++) {
-        glPushMatrix();
-        glTranslatef(_blocks[i].getPos('x'),
-                     _blocks[i].getPos('y'),
-                     _blocks[i].getPos('z'));
-        glRotatef(_blocks[i].getAngle('x'),1,0,0);
-        glRotatef(_blocks[i].getAngle('y'),0,1,0);
-        glRotatef(_blocks[i].getAngle('z'),0,0,1);
-        drawCube('c',*blue,0, 0, 0);
-        drawCube('c',*red,2, 0, 0);
-        drawCube('c',*blue,2, 2, 0);
-        glPopMatrix();
-	}
-	*/
-
-//	DrawBorder();
-	int k = 0,sh=0;
+	DrawBorder();
+	int k = 0,ish=0;
 	for (int i = 0; i < 20; i++) {
 		for (int j = 0; j < 10; j++) {
-            glBegin(GL_QUADS);
-            glColor3f(1,1,1);
-            glVertex3f(-6,18,0);
-            glVertex3f(14,18,0);
-            glVertex3f(14,-22,0);
-            glVertex3f(-6,-22,0);
-            glEnd();
 			if (board.board[i][j] || board.boardCurrent[i][j]) {
 				cout << k<< " " <<i << " " << j << endl;
 				k++;
 				glPushMatrix();
 				Block b = board.blocks[i][j];
 				glTranslatef(j*2-5,-i*2+17,0);    //calculate location
-				glRotatef(0, 1, 0, 0);
-				glRotatef(0, 0, 1, 0);
-				glRotatef(0, 0, 0, 1);
-				b.drawCube('c', 0, 0, 0);
+				b.drawCube('c');
 				glPopMatrix();
-
-				glPushMatrix(); sh=i;  //i=row j=col
+				//shadow
+                glPushMatrix(); ish=i;  //i=row j=col
 				b = board.blocks[i][j];
-				while(!board.board[sh][j] && -sh*2+17>=-22) sh++;
+				while(!board.board[ish][j] && -ish*2+17>=-22) ish++;
 				b.color=gray;
-				glTranslatef(j*2-5,-sh*2+17,0);    //calculate location
-				glRotatef(0, 1, 0, 0);
-				glRotatef(0, 0, 1, 0);
-				glRotatef(0, 0, 0, 1);
-				b.drawCube('c', 0, 0, 0);
+				glTranslatef(j*2-5,-ish*2+17,0);    //calculate location
+				b.drawCube('c');
 				glPopMatrix();
-			}
+            }
 		}
 	}
 
@@ -365,9 +323,11 @@ void drawScene() {
 
 void update(int value) {
 	if (!board.currentColumn.empty()) {
+        speed=(space)?10:1000;
 		if (!board.movedown()) {
+            space=false;
             random = rand() % 5;
-			Block block = Block('c', col[random],Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
+			Block block = Block(col[random]);
 			createBlock(random, block);
 		}
 
@@ -375,15 +335,8 @@ void update(int value) {
 
 		glutPostRedisplay();
 	}
-	glutTimerFunc(1000, update, 0);
+	glutTimerFunc(speed, update, 0);
 }
-
-//Called every TIMER_MS milliseconds
-//void update(int value) {
-//	advance(_blocks, _octree, (float)TIMER_MS / 1000.0f, _timeUntilUpdate);
-//	glutPostRedisplay();
-//	glutTimerFunc(TIMER_MS, update, 0);
-//}
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
@@ -395,13 +348,14 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(drawScene);
 	glutKeyboardFunc(handleKeypress);
 	glutSpecialFunc(handleArrow);
+	glutMouseFunc(handleMouse);
 	glutReshapeFunc(handleResize);
-	t_model.Load("D:/_fang/year 3/cg/demotetris/model/t-tetris-m.obj");
-	l_model.Load("D:/_fang/year 3/cg/demotetris/model/l-tetris-m.obj");
+//	t_model.Load("D:/_fang/year 3/cg/demotetris/model/t-tetris-m.obj");
+//	l_model.Load("D:/_fang/year 3/cg/demotetris/model/l-tetris-m.obj");
 //	t_model.Load("model/t-tetris-m.obj");
 //	l_model.Load("model/l-tetris-m.obj");
 
-	glutTimerFunc(1000, update, 0);
+	glutTimerFunc(speed, update, 0);
 
 	glutMainLoop();
 	return 0;
