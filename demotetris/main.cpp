@@ -53,6 +53,18 @@ GLfloat gray[] = { 0.4,0.4,0.4 };
 GLfloat shadow[] = { 0.7,0.7,0.7 };
 map<int,GLfloat*> col;
 int speed=1000; bool space=false;
+// Camera position
+float x = 0.0, y = -5.0; // initially 5 units south of origin
+float deltaMove = 0.0; // initially camera doesn't move
+
+// Camera direction
+float lx = 0.0, ly = 1.0; // camera points initially along y-axis
+float angle = 0.0; // angle of rotation for the camera direction
+float deltaAngle = 0.0; // additional angle change when dragging
+
+// Mouse drag control
+int isDragging = 0; // true when dragging
+int xDragStart = 0; // records the x-coordinate when dragging starts
 
 void createBlock(int random,Block block) {
 	if (random == 0) { // ---
@@ -125,18 +137,6 @@ void createBlock(int random,Block block) {
 //	board.addblocks(block, 1, 6);
 	glutPostRedisplay();
 }
-
-//Returns a random float from 0 to < 1
-float randomFloat() {
-    srand(time(NULL));
-	return (float)rand() / ((float)RAND_MAX + 1);
-}
-//Deletes everything.  This should be called when exiting the program.
-void cleanup() {
-//	for(unsigned int i = 0; i < _blocks.size(); i++) {
-		delete[] &_blocks;
-//	}
-}
 void handleArrow(int key,int x,int y) {
 	if (key == GLUT_KEY_LEFT) {
 		if (!board.currentColumn.empty()) {
@@ -185,10 +185,28 @@ void handleKeypress(unsigned char key,int x,int y) {
 		glutPostRedisplay();
 	}
 }
-void handleMouse(int button,int state,int x,int y) {
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+void mouseButton(int button, int state, int x, int y) {
+    if (button == GLUT_LEFT_BUTTON) {
+		if (state == GLUT_DOWN) { // left mouse button pressed
+			isDragging = 1; // start dragging
+			xDragStart = x; // save x where button first pressed
+		}
+		else  { /* (state = GLUT_UP) */
+			angle += deltaAngle; // update camera turning angle
+			isDragging = 0; // no longer dragging
+//			xDragStart = -1;
+		}
+	}
+}
+void mouseMove(int x, int y) {
+    if (isDragging) { // only when dragging
+		// update the change in angle
+		deltaAngle = (x - xDragStart) * 0.1;
 
-    }
+		// camera's direction is set to angle + deltaAngle
+		lx = -sin(angle + deltaAngle);
+		ly = cos(angle + deltaAngle);
+	}
 }
 GLuint loadTexture(Image* image) {
 	GLuint textureId;
@@ -215,12 +233,6 @@ void initRendering() {
 	glEnable(GL_NORMALIZE);
 	col[0]=red,col[1]=green,col[2]=blue,col[3]=yellow,
     col[4]=pink,col[5]=purple,col[6]=brown,col[7]=gray;
-	Vec3f pos = Vec3f(8 * randomFloat() - 4,
-                          5,
-                          8 * randomFloat() - 4);
-//    Block block = Block('t',pos,Vec3f(0,0,0),t_model);
-//	//Block block = Block('t', Vec3f(0,9,8), Vec3f(0, 0, 0), t_model);
-//    _blocks.push_back(block);
 }
 void DrawBorder() {
 //    glBegin(GL_LINES);
@@ -294,6 +306,8 @@ void drawScene() {
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/brick.bmp");
 //	setUptexture("texture/brick.bmp");
 
+    glPushMatrix();
+    glRotatef(angle,0,1,0);
 	DrawBorder();
 	int k = 0,ish=0;
 	for (int i = 0; i < 20; i++) {
@@ -316,7 +330,7 @@ void drawScene() {
 				glPopMatrix();
             }
 		}
-	}
+	} glPopMatrix();
 
 	glutSwapBuffers();
 }
@@ -348,7 +362,10 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(drawScene);
 	glutKeyboardFunc(handleKeypress);
 	glutSpecialFunc(handleArrow);
-	glutMouseFunc(handleMouse);
+
+	glutMouseFunc(mouseButton);
+	glutMotionFunc(mouseMove);
+
 	glutReshapeFunc(handleResize);
 //	t_model.Load("D:/_fang/year 3/cg/demotetris/model/t-tetris-m.obj");
 //	l_model.Load("D:/_fang/year 3/cg/demotetris/model/l-tetris-m.obj");
