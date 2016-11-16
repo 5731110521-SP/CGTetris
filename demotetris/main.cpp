@@ -172,6 +172,21 @@ void handleArrow(int key,int x,int y) {
 		}
 	}
 }
+void pressSpecialKey(unsigned char key, int xx, int yy)
+{
+	switch (key) {
+		case '.' : deltaMove = 1.0; break;
+		case '\/' : deltaMove = -1.0; break;
+	}
+}
+
+void releaseSpecialKey(unsigned char key, int x, int y)
+{
+	switch (key) {
+		case '.' : deltaMove = 0.0; break;
+		case '\/' : deltaMove = 0.0; break;
+	}
+}
 void handleKeypress(unsigned char key,int x,int y) {
     if (key == 27) exit(0);
     if (key == 32) space=true;
@@ -201,7 +216,7 @@ void mouseButton(int button, int state, int x, int y) {
 void mouseMove(int x, int y) {
     if (isDragging) { // only when dragging
 		// update the change in angle
-		deltaAngle = (x - xDragStart) * 0.1;
+		deltaAngle = (x - xDragStart) * 0.005;
 
 		// camera's direction is set to angle + deltaAngle
 		lx = -sin(angle + deltaAngle);
@@ -238,10 +253,10 @@ void DrawBorder() {
 //    glBegin(GL_LINES);
         glBegin(GL_QUADS);
         glColor3f(1,1,1);
-        glVertex3f(-6,18,0);
-        glVertex3f(14,18,0);
-        glVertex3f(14,-22,0);
-        glVertex3f(-6,-22,0);
+        glVertex3f(-6,18,-1);
+        glVertex3f(14,18,-1);
+        glVertex3f(14,-22,-1);
+        glVertex3f(-6,-22,-1);
         glEnd();
 
 //        for(int i=0; i<20; i++) for(int j=0; j<10; j++) {
@@ -306,8 +321,13 @@ void drawScene() {
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/brick.bmp");
 //	setUptexture("texture/brick.bmp");
 
-    glPushMatrix();
-    glRotatef(angle,0,1,0);
+    gluLookAt(
+			x,      1,      y,
+			x + lx, 1, y+ly,
+			0.0,    1.0,    0);
+
+    cout<<"isDrag "<<isDragging<<endl;
+
 	DrawBorder();
 	int k = 0,ish=0;
 	for (int i = 0; i < 20; i++) {
@@ -330,11 +350,17 @@ void drawScene() {
 				glPopMatrix();
             }
 		}
-	} glPopMatrix();
+	}
 
 	glutSwapBuffers();
 }
-
+void updatecam(void) {
+	if (deltaMove) { // update camera position
+		x += deltaMove * lx * 0.1;
+		y += deltaMove * ly * 0.1;
+	}
+	glutPostRedisplay(); // redisplay everything
+}
 void update(int value) {
 	if (!board.currentColumn.empty()) {
         speed=(space)?10:1000;
@@ -359,14 +385,19 @@ int main(int argc, char** argv) {
 	glutCreateWindow("TETRIS ><");
 	initRendering();
 
+	glutReshapeFunc(handleResize);
 	glutDisplayFunc(drawScene);
+	glutIdleFunc(updatecam);
+    glutKeyboardFunc(pressSpecialKey); // process special key pressed
+                    // Warning: Nonstandard function! Delete if desired.
+	glutKeyboardFunc(releaseSpecialKey); // process special key release
+
 	glutKeyboardFunc(handleKeypress);
 	glutSpecialFunc(handleArrow);
 
 	glutMouseFunc(mouseButton);
 	glutMotionFunc(mouseMove);
 
-	glutReshapeFunc(handleResize);
 //	t_model.Load("D:/_fang/year 3/cg/demotetris/model/t-tetris-m.obj");
 //	l_model.Load("D:/_fang/year 3/cg/demotetris/model/l-tetris-m.obj");
 //	t_model.Load("model/t-tetris-m.obj");
