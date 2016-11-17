@@ -44,6 +44,8 @@
 		</Linker>
 		<Unit filename="block.cpp" />
 		<Unit filename="block.h" />
+		<Unit filename="board.cpp" />
+		<Unit filename="board.h" />
 		<Unit filename="imageloader.cpp" />
 		<Unit filename="imageloader.h" />
 		<Unit filename="main.cpp" />

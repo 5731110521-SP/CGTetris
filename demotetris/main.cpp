@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <set>
+#include <map>
 #include <stdlib.h>
 #include <vector>
 #include <time.h>
@@ -35,9 +36,8 @@ int current=0;
 int random = 0;
 vector<int> typeBlock = { 0,1,1,2,3,3,4,4,5,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
-int box[WIDTH][HEIGHT][DEPTH];
 vector<Block> _blocks;
-Model_OBJ t_model,l_model;
+Model_OBJ model;
 int _axis;
 float _angle[3];
 GLfloat mat[16];
@@ -45,6 +45,26 @@ GLuint _textureId;
 GLfloat red[] = { 1,0,0 };
 GLfloat green[] = { 0,1,0 };
 GLfloat blue[] = { 0,0,1 };
+GLfloat yellow[] = { 0.3,0.3,0 };
+GLfloat pink[] = { 0.5,0,0.5 };
+GLfloat purple[] = { 1,0,1 };
+GLfloat brown[] = { 0,1,1 };
+GLfloat gray[] = { 0.4,0.4,0.4 };
+GLfloat shadow[] = { 0.7,0.7,0.7 };
+map<int,GLfloat*> col;
+int speed=1000; bool space=false;
+// Camera position
+float x = 0.0, y = -5.0; // initially 5 units south of origin
+float deltaMove = 0.0; // initially camera doesn't move
+
+// Camera direction
+float lx = 0.0, ly = 1.0; // camera points initially along y-axis
+float angle = 0.0; // angle of rotation for the camera direction
+float deltaAngle = 0.0; // additional angle change when dragging
+
+// Mouse drag control
+int isDragging = 0; // true when dragging
+int xDragStart = 0; // records the x-coordinate when dragging starts
 
 void createBlock(int random,Block block) {
 	if (random == 0) { // ---
@@ -55,7 +75,7 @@ void createBlock(int random,Block block) {
 		board.currentPointRow = 0;
 		board.currentPointColumn = 3;
 	}
-	else if (random == 1) {				// - 
+	else if (random == 1) {				// -
 		board.addblocks(block, 2, 1);	// ---
 		board.addblocks(block, 2, 2);
 		board.addblocks(block, 2, 3);
@@ -117,18 +137,6 @@ void createBlock(int random,Block block) {
 //	board.addblocks(block, 1, 6);
 	glutPostRedisplay();
 }
-
-//Returns a random float from 0 to < 1
-float randomFloat() {
-    srand(time(NULL));
-	return (float)rand() / ((float)RAND_MAX + 1);
-}
-//Deletes everything.  This should be called when exiting the program.
-void cleanup() {
-//	for(unsigned int i = 0; i < _blocks.size(); i++) {
-		delete[] &_blocks;
-//	}
-}
 void handleArrow(int key,int x,int y) {
 	if (key == GLUT_KEY_LEFT) {
 		if (!board.currentColumn.empty()) {
@@ -139,12 +147,11 @@ void handleArrow(int key,int x,int y) {
 	if (key == GLUT_KEY_DOWN) {
 		if (!board.currentColumn.empty()) {
 			if (!board.movedown()) {
-				Block block = Block('t', blue, Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-
 				random_shuffle(typeBlock.begin(), typeBlock.end());
 				random = rand() % 12;
 				if (typeBlock[random] != choose) choose = typeBlock[random];
 				else choose = typeBlock[random / 2];
+				Block block = Block(col[choose]);
 				createBlock(choose, block);
 			}
 
@@ -165,18 +172,48 @@ void handleArrow(int key,int x,int y) {
 		}
 	}
 }
-
+void releaseSpecialKey(unsigned char key, int x, int y){
+	if (key == '.') deltaMove = 0.0;
+	if (key == '\/') deltaMove = 0.0;
+}
 void handleKeypress(unsigned char key,int x,int y) {
-    if (key == 27) { cleanup(); exit(0); }
+    if (key == 27) exit(0);
+    if (key == 32) space=true;
+//    if (key == '.') deltaMove = 1.0;
+//	if (key == '\/') deltaMove = -1.0;
 	if (key == 's') {
-		Block block = Block('t', blue, Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-		random_shuffle(typeBlock.begin(),typeBlock.end());
-		random = rand() % 12;
-		createBlock(typeBlock[random],block);
+		random_shuffle(typeBlock.begin(), typeBlock.end());
+        random = rand() % 12;
+        if (typeBlock[random] != choose) choose = typeBlock[random];
+        else choose = typeBlock[random / 2];
+        Block block = Block(col[choose]);
+        createBlock(choose, block);
 		glutPostRedisplay();
 	}
 }
+void mouseButton(int button, int state, int x, int y) {
+    if (button == GLUT_LEFT_BUTTON) {
+		if (state == GLUT_DOWN) { // left mouse button pressed
+			isDragging = 1; // start dragging
+			xDragStart = x; // save x where button first pressed
+		}
+		else  { /* (state = GLUT_UP) */
+			angle += deltaAngle; // update camera turning angle
+			isDragging = 0; // no longer dragging
+//			xDragStart = -1;
+		}
+	}
+}
+void mouseMove(int x, int y) {
+    if (isDragging) { // only when dragging
+		// update the change in angle
+		deltaAngle = (x - xDragStart) * 0.005;
 
+		// camera's direction is set to angle + deltaAngle
+		lx = -sin(angle + deltaAngle);
+		ly = cos(angle + deltaAngle);
+	}
+}
 GLuint loadTexture(Image* image) {
 	GLuint textureId;
 	glGenTextures(1, &textureId); //Make room for our texture
@@ -200,29 +237,35 @@ void initRendering() {
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
 	glEnable(GL_NORMALIZE);
-	Vec3f pos = Vec3f(8 * randomFloat() - 4,
-                          5,
-                          8 * randomFloat() - 4);
-//    Block block = Block('t',pos,Vec3f(0,0,0),t_model);
-//	//Block block = Block('t', Vec3f(0,9,8), Vec3f(0, 0, 0), t_model);
-//    _blocks.push_back(block);
+	col[0]=red,col[1]=green,col[2]=blue,col[3]=yellow,
+    col[4]=pink,col[5]=purple,col[6]=brown,col[7]=gray;
 }
 void DrawBorder() {
     glBegin(GL_LINES);
-        glColor3f(1,0,0);
-        glVertex3f(-6,-18,0);
-        glVertex3f(-6,18,0);
-
-        glVertex3f(6,-18,0);
-        glVertex3f(6,18,0);
-
-        glVertex3f(-6,-18,0);
-        glVertex3f(6,-18,0);
-
-        glVertex3f(-6,18,0);
-        glVertex3f(6,18,0);
-
     glEnd();
+        //x*2-5,-y*2+17,0
+        glBegin(GL_QUADS);
+        glColor3f(1,1,1);
+        glVertex3f(-6,18,-1);
+        glVertex3f(14,18,-1);
+        glVertex3f(14,-22,-1);
+        glVertex3f(-6,-22,-1);
+        glEnd();
+
+        for(int i=0; i<20; i++) for(int j=0; j<10; j++) {
+            if(i==0||i==19||j==0||j==9) {
+                glPushMatrix();
+                Block b = Block(gray);
+                if(i==0) glTranslatef(j*2-5,19,0);
+                else if(i==19) glTranslatef(j*2-5,-23,0);
+                else if(j==0) glTranslatef(-7,-i*2+17,0);
+                else glTranslatef(15,-i*2+17,0);
+//                b.drawCube('t');
+                glColor3f(yellow[0],yellow[1],yellow[2]);
+                model.Draw();
+                glPopMatrix();
+            }
+        }
 }
 void handleResize(int w, int h) {
     	//Tell OpenGL how to convert from coordinates to pixel values
@@ -269,85 +312,58 @@ void drawScene() {
 	glTranslatef(0,0,-70);
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/watertexture.bmp");
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/crate.bmp");
-//	setUptexture("D:/_fang/year 3/cg/demotetris/texture/brick.bmp");
+	setUptexture("D:/_fang/year 3/cg/demotetris/texture/brick.bmp");
 //	setUptexture("texture/brick.bmp");
 
-	cout<<"current "<<current<<endl;
-	cout<<"num block "<<_blocks.size()<<endl;
+    gluLookAt(
+			x,      1,      y,
+			x + lx, 1, y+ly,
+			0.0,    1.0,    0);
 
-	/*      model giz
-	for(int i=0; i<_blocks.size(); i++) {
-        cout<<"push"<<endl;
-        glPushMatrix();
-        glTranslatef(_blocks[i].getPos('x'),
-                     _blocks[i].getPos('y'),
-                     _blocks[i].getPos('z'));
-        cout<<"translated"<<endl;
-        glRotatef(_blocks[i].getAngle('x'),1,0,0);
-        glRotatef(_blocks[i].getAngle('y'),0,1,0);
-        glRotatef(_blocks[i].getAngle('z'),0,0,1);
-        cout<<"rotated"<<endl;
-        if(_blocks[i].getType()=='t') _blocks[i].setModel(t_model);
-        if(_blocks[i].getType()=='l') _blocks[i].setModel(l_model);
-        cout<<"model set"<<endl;
-        _blocks[i].getModel().Draw();
-    //        if(b.getModel()==t_model) cout<<"correct model"<<endl;
-        cout<<"pop"<<endl;
-        glPopMatrix();
-	}
-    */
-
-	/*      texture/color giz
-	for(int i=0; i<_blocks.size(); i++) {
-        glPushMatrix();
-        glTranslatef(_blocks[i].getPos('x'),
-                     _blocks[i].getPos('y'),
-                     _blocks[i].getPos('z'));
-        glRotatef(_blocks[i].getAngle('x'),1,0,0);
-        glRotatef(_blocks[i].getAngle('y'),0,1,0);
-        glRotatef(_blocks[i].getAngle('z'),0,0,1);
-        drawCube('c',*blue,0, 0, 0);
-        drawCube('c',*red,2, 0, 0);
-        drawCube('c',*blue,2, 2, 0);
-        glPopMatrix();
-	}
-	*/
-
-//	DrawBorder();
-	int k = 0;
+	DrawBorder();
+	int k = 0,ish=0;
 	for (int i = 0; i < 20; i++) {
 		for (int j = 0; j < 10; j++) {
-            glBegin(GL_QUADS);
-            glColor3f(1,1,1);
-            glVertex3f(-6,18,0);
-            glVertex3f(14,18,0);
-            glVertex3f(14,-22,0);
-            glVertex3f(-6,-22,0);
-            glEnd();
 			if (board.board[i][j] || board.boardCurrent[i][j]) {
 				cout << k<< " " <<i << " " << j << endl;
 				k++;
 				glPushMatrix();
 				Block b = board.blocks[i][j];
-				b.color=blue;
-				glTranslatef(j*2-5,-i*2+17,0);    //set initial location
-				glRotatef(0, 1, 0, 0);
-				glRotatef(0, 0, 1, 0);
-				glRotatef(0, 0, 0, 1);
-				b.drawCube('c', 0, 0, 0);
+				glTranslatef(j*2-5,-i*2+17,0);    //calculate location
+//				b.drawCube('c');
+                glColor3f(b.color[0],b.color[1],b.color[2]);
+                model.Draw();
 				glPopMatrix();
-			}
+				//shadow
+                glPushMatrix(); ish=i;  //i=row j=col
+				b = board.blocks[i][j];
+				while(!board.board[ish][j] && -ish*2+17>=-22) ish++;
+				b.color=gray;
+				glTranslatef(j*2-5,-ish*2+17,0);    //calculate location
+//				b.drawCube('c');
+                glColor3f(gray[0],gray[1],gray[2]);
+                model.Draw();
+				glPopMatrix();
+            }
 		}
 	}
 
 	glutSwapBuffers();
 }
-
+void updatecam(void) {
+	if (deltaMove) { // update camera position
+		x += deltaMove * lx * 0.01;
+		y += deltaMove * ly * 0.01;
+	}
+	glutPostRedisplay(); // redisplay everything
+}
 void update(int value) {
 	if (!board.currentColumn.empty()) {
+        speed=(space)?10:1000;
 		if (!board.movedown()) {
-			Block block = Block('t', blue,Vec3f(0, 9, 8), Vec3f(0, 0, 0), t_model);
-			random = rand() % 5;
+            space=false;
+            random = rand() % 5;
+			Block block = Block(col[random]);
 			createBlock(random, block);
 		}
 
@@ -355,15 +371,8 @@ void update(int value) {
 
 		glutPostRedisplay();
 	}
-	glutTimerFunc(1000, update, 0);
+	glutTimerFunc(speed, update, 0);
 }
-
-//Called every TIMER_MS milliseconds
-//void update(int value) {
-//	advance(_blocks, _octree, (float)TIMER_MS / 1000.0f, _timeUntilUpdate);
-//	glutPostRedisplay();
-//	glutTimerFunc(TIMER_MS, update, 0);
-//}
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
@@ -372,16 +381,25 @@ int main(int argc, char** argv) {
 	glutCreateWindow("TETRIS ><");
 	initRendering();
 
+	glutReshapeFunc(handleResize);
 	glutDisplayFunc(drawScene);
+	glutIdleFunc(updatecam);
+
 	glutKeyboardFunc(handleKeypress);
 	glutSpecialFunc(handleArrow);
-	glutReshapeFunc(handleResize);
-	t_model.Load("D:/_fang/year 3/cg/demotetris/model/t-tetris-m.obj");
-	l_model.Load("D:/_fang/year 3/cg/demotetris/model/l-tetris-m.obj");
+//	glutKeyboardUpFunc(releaseSpecialKey);
+
+	glutMouseFunc(mouseButton);
+	glutMotionFunc(mouseMove);
+
+	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
+//	model.Load("model/cube-m.obj");
+//	t_model.Load("D:/_fang/year 3/cg/demotetris/model/t-tetris-m.obj");
+//	l_model.Load("D:/_fang/year 3/cg/demotetris/model/l-tetris-m.obj");
 //	t_model.Load("model/t-tetris-m.obj");
 //	l_model.Load("model/l-tetris-m.obj");
 
-	glutTimerFunc(1000, update, 0);
+	glutTimerFunc(speed, update, 0);
 
 	glutMainLoop();
 	return 0;
