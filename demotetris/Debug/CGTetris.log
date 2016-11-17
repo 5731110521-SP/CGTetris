@@ -1,5 +1,19 @@
 ﻿  main.cpp
-main.cpp(123): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-main.cpp(333): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(48): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+main.cpp(48): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+main.cpp(52): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+main.cpp(52): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+main.cpp(53): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+main.cpp(53): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+main.cpp(177): warning C4129: '/': unrecognized character escape sequence
+main.cpp(210): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+main.cpp(259): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(260): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(261): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(262): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(332): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(342): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(355): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+main.cpp(356): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
   CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.exe
   CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.pdb (Full PDB)

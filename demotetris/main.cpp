@@ -312,8 +312,8 @@ void drawScene() {
 	glTranslatef(0,0,-70);
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/watertexture.bmp");
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/crate.bmp");
-	setUptexture("D:/_fang/year 3/cg/demotetris/texture/brick.bmp");
-//	setUptexture("texture/brick.bmp");
+//	setUptexture("D:/_fang/year 3/cg/demotetris/texture/brick.bmp");
+	setUptexture("texture/brick.bmp");
 
     gluLookAt(
 			x,      1,      y,
@@ -392,8 +392,9 @@ int main(int argc, char** argv) {
 	glutMouseFunc(mouseButton);
 	glutMotionFunc(mouseMove);
 
-	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
-//	model.Load("model/cube-m.obj");
+//	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
+	model.Load("model/cube-m.obj");
+//	model.Load("model/cube.obj");
 //	t_model.Load("D:/_fang/year 3/cg/demotetris/model/t-tetris-m.obj");
 //	l_model.Load("D:/_fang/year 3/cg/demotetris/model/l-tetris-m.obj");
 //	t_model.Load("model/t-tetris-m.obj");
