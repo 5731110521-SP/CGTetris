@@ -31,10 +31,12 @@ using namespace std;
 #define DEPTH 20
 
 Board board;
-int choose = -1;
+int choose;
 int current=0;
-int random = 0;
-vector<int> typeBlock = { 0,1,1,2,3,3,4,4,5,5,6,7 };
+int random;
+int prevType,nextType;
+bool pressedS = false;
+vector<int> typeBlock = { 0,1,2,3,4,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
 vector<Block> _blocks;
 Model_OBJ model;
@@ -49,7 +51,8 @@ GLfloat yellow[] = { 0.3,0.3,0 };
 GLfloat pink[] = { 0.5,0,0.5 };
 GLfloat purple[] = { 1,0,1 };
 GLfloat brown[] = { 0,1,1 };
-GLfloat gray[] = { 0.4,0.4,0.4 };
+GLfloat gray[] = { 0.1,0.1,0.1 };
+GLfloat white[] = { 1,1,1 };
 GLfloat shadow[] = { 0.7,0.7,0.7 };
 map<int,GLfloat*> col;
 int speed=1000; bool space=false;
@@ -95,7 +98,7 @@ void createBlock(int random,Block block) {
 		board.addblocks(block, 1, 1);	// ---
 		board.addblocks(block, 1, 2);
 		board.addblocks(block, 1, 3);
-		board.addblocks(block, 2, 3);
+		board.addblocks(block, 2, 2);
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
@@ -147,10 +150,12 @@ void handleArrow(int key,int x,int y) {
 	if (key == GLUT_KEY_DOWN) {
 		if (!board.currentColumn.empty()) {
 			if (!board.movedown()) {
+                srand(time(0));
 				random_shuffle(typeBlock.begin(), typeBlock.end());
-				random = rand() % 12;
+				random = rand() % typeBlock.size();
 				if (typeBlock[random] != choose) choose = typeBlock[random];
-				else choose = typeBlock[random / 2];
+				else if(random+1 < typeBlock.size()) choose = typeBlock[random+1];
+				else if(random-1 >= 0) choose = typeBlock[random-1];
 				Block block = Block(col[choose]);
 				createBlock(choose, block);
 			}
@@ -182,13 +187,19 @@ void handleKeypress(unsigned char key,int x,int y) {
 //    if (key == '.') deltaMove = 1.0;
 //	if (key == '\/') deltaMove = -1.0;
 	if (key == 's') {
-		random_shuffle(typeBlock.begin(), typeBlock.end());
-        random = rand() % 12;
-        if (typeBlock[random] != choose) choose = typeBlock[random];
-        else choose = typeBlock[random / 2];
-        Block block = Block(col[choose]);
-        createBlock(choose, block);
-		glutPostRedisplay();
+        if(!pressedS){
+            pressedS = true;
+            srand(time(0));
+            random_shuffle(typeBlock.begin(), typeBlock.end());
+    //		for(int i = 0;i<typeBlock.size();i++) cout << typeBlock[i] << " ";
+            random = rand() % typeBlock.size();
+            if (typeBlock[random] != choose) choose = typeBlock[random];
+            else if(random+1 < typeBlock.size()) choose = typeBlock[random+1];
+            else if(random-1 >= 0) choose = typeBlock[random-1];
+            Block block = Block(col[choose]);
+            createBlock(choose, block);
+            glutPostRedisplay();
+        }
 	}
 }
 void mouseButton(int button, int state, int x, int y) {
@@ -200,7 +211,6 @@ void mouseButton(int button, int state, int x, int y) {
 		else  { /* (state = GLUT_UP) */
 			angle += deltaAngle; // update camera turning angle
 			isDragging = 0; // no longer dragging
-//			xDragStart = -1;
 		}
 	}
 }
@@ -245,23 +255,23 @@ void DrawBorder() {
     glEnd();
         //x*2-5,-y*2+17,0
         glBegin(GL_QUADS);
-        glColor3f(1,1,1);
-        glVertex3f(-6,18,-1);
-        glVertex3f(14,18,-1);
-        glVertex3f(14,-22,-1);
-        glVertex3f(-6,-22,-1);
+//        glColor3f(1,1,1);
+//        glVertex3f(-6,18,-1);
+//        glVertex3f(14,18,-1);
+//        glVertex3f(14,-22,-1);
+//        glVertex3f(-6,-22,-1);
         glEnd();
 
-        for(int i=0; i<20; i++) for(int j=0; j<10; j++) {
-            if(i==0||i==19||j==0||j==9) {
+        for(int i=0; i<=21; i++) for(int j=0; j<=11; j++) {
+            if(i==0||i==21||j==0||j==11) {
                 glPushMatrix();
-                Block b = Block(gray);
-                if(i==0) glTranslatef(j*2-5,19,0);
-                else if(i==19) glTranslatef(j*2-5,-23,0);
-                else if(j==0) glTranslatef(-7,-i*2+17,0);
-                else glTranslatef(15,-i*2+17,0);
+                Block b = Block(white);
+                if(i==0) glTranslatef(j*2-7,19,0);
+                else if(i==21) glTranslatef(j*2-7,-23,0);
+                else if(j==0) glTranslatef(-7,-i*2+19,0);
+                else if(j==11) glTranslatef(15,-i*2+19,0);
 //                b.drawCube('t');
-                glColor3f(yellow[0],yellow[1],yellow[2]);
+                glColor3f(b.color[0],b.color[1],b.color[2]);
                 model.Draw();
                 glPopMatrix();
             }
@@ -309,7 +319,7 @@ void drawScene() {
 	glLoadIdentity();
 
 	setUplighting();
-	glTranslatef(0,0,-70);
+	glTranslatef(0,0,-68);
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/watertexture.bmp");
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/crate.bmp");
 	setUptexture("D:/_fang/year 3/cg/demotetris/texture/brick.bmp");
@@ -325,7 +335,7 @@ void drawScene() {
 	for (int i = 0; i < 20; i++) {
 		for (int j = 0; j < 10; j++) {
 			if (board.board[i][j] || board.boardCurrent[i][j]) {
-				cout << k<< " " <<i << " " << j << endl;
+//				cout << k<< " " <<i << " " << j << endl;
 				k++;
 				glPushMatrix();
 				Block b = board.blocks[i][j];
@@ -337,11 +347,11 @@ void drawScene() {
 				//shadow
                 glPushMatrix(); ish=i;  //i=row j=col
 				b = board.blocks[i][j];
-				while(!board.board[ish][j] && -ish*2+17>=-22) ish++;
-				b.color=gray;
+				while(!board.board[ish][j] && -ish*2+17>-22) ish++;
+				b.color=shadow;
 				glTranslatef(j*2-5,-ish*2+17,0);    //calculate location
 //				b.drawCube('c');
-                glColor3f(gray[0],gray[1],gray[2]);
+                glColor3f(b.color[0],b.color[1],b.color[2]);
                 model.Draw();
 				glPopMatrix();
             }
@@ -351,6 +361,9 @@ void drawScene() {
 	glutSwapBuffers();
 }
 void updatecam(void) {
+//     genType(){
+//
+//     }
 	if (deltaMove) { // update camera position
 		x += deltaMove * lx * 0.01;
 		y += deltaMove * ly * 0.01;
@@ -362,9 +375,13 @@ void update(int value) {
         speed=(space)?10:1000;
 		if (!board.movedown()) {
             space=false;
-            random = rand() % 5;
-			Block block = Block(col[random]);
-			createBlock(random, block);
+            srand(time(0));
+            random_shuffle(typeBlock.begin(), typeBlock.end());
+            random = rand() % typeBlock.size();
+            if (typeBlock[random] != choose) choose = typeBlock[random];
+            else choose = typeBlock[random / 2];
+            Block block = Block(col[choose]);
+            createBlock(choose, block);
 		}
 
 		board.update();
@@ -377,7 +394,7 @@ void update(int value) {
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(400, 400);
+	glutInitWindowSize(600, 600);
 	glutCreateWindow("TETRIS ><");
 	initRendering();
 
