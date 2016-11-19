@@ -344,17 +344,16 @@ void drawScene() {
                 glColor3f(b.color[0],b.color[1],b.color[2]);
                 model.Draw();
 				glPopMatrix();
-				//shadow
-                glPushMatrix(); ish=i;  //i=row j=col
-				b = board.blocks[i][j];
-				while(!board.board[ish][j] && -ish*2+17>-22) ish++;
-				b.color=shadow;
-				glTranslatef(j*2-5,-ish*2+17,0);    //calculate location
-//				b.drawCube('c');
-                glColor3f(b.color[0],b.color[1],b.color[2]);
-                model.Draw();
-				glPopMatrix();
             }
+            else if (board.boardShadow[i][j]) {
+				glPushMatrix();
+				Block b = Block(shadow);
+				glTranslatef(j * 2 - 5, -i * 2 + 17, 0);    //calculate location
+//				b.drawCube('c');
+				glColor3f(b.color[0], b.color[1], b.color[2]);
+				model.Draw();
+				glPopMatrix();
+			}
 		}
 	}
 
