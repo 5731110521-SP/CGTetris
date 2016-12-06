@@ -1,5 +1,24 @@
 ﻿  main.cpp
-main.cpp(123): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-main.cpp(333): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(50): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+main.cpp(50): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+main.cpp(54): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+main.cpp(54): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+main.cpp(56): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+main.cpp(56): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+main.cpp(153): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+main.cpp(157): warning C4018: '<': signed/unsigned mismatch
+main.cpp(182): warning C4129: '/': unrecognized character escape sequence
+main.cpp(192): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+main.cpp(197): warning C4018: '<': signed/unsigned mismatch
+main.cpp(220): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+main.cpp(269): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(270): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(271): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(272): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(342): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(351): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+main.cpp(367): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+main.cpp(368): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+main.cpp(377): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.exe
   CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.pdb (Full PDB)
