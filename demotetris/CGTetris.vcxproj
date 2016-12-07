@@ -102,6 +102,7 @@
     <ClCompile Include="imageloader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="modelloader.cpp" />
+    <ClCompile Include="slot.cpp" />
     <ClCompile Include="vec3f.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +110,7 @@
     <ClInclude Include="board.h" />
     <ClInclude Include="imageloader.h" />
     <ClInclude Include="modelloader.h" />
+    <ClInclude Include="slot.h" />
     <ClInclude Include="vec3f.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

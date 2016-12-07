@@ -42,7 +42,7 @@ void Board::addblocks(Block b, int row, int column)
 	//    blocks[nrow][column]=b;
 	//	shadowrow.pop_back();
 	//    shadowrow.push_back(nrow);
-
+	/*
 	for (int i = 0; i < 20; i++) {
 		for (int j = 0; j < 10; j++) cout << boardCurrent[i][j] << " ";
 		cout << endl;
@@ -53,6 +53,7 @@ void Board::addblocks(Block b, int row, int column)
 		cout << endl;
 	}
 	cout << endl;
+	*/
 }
 
 bool Board::onCurrent(int row, int column)

@@ -21,6 +21,7 @@
 #include "vec3f.h"
 #include "block.h"
 #include "board.h"
+#include "slot.h"
 
 using namespace std;
 
@@ -31,10 +32,11 @@ using namespace std;
 #define DEPTH 20
 
 Board board;
+Slot slot;
 int choose;
 int current=0;
 int random;
-int prevType,nextType;
+int prevType,nextType,keep=0,keepCurrent;
 bool pressedS = false;
 vector<int> typeBlock = { 0,1,2,3,4,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
@@ -69,60 +71,97 @@ float deltaAngle = 0.0; // additional angle change when dragging
 int isDragging = 0; // true when dragging
 int xDragStart = 0; // records the x-coordinate when dragging starts
 
-void createBlock(int random,Block block) {
-	if (random == 0) { // ---
+void randomBlock() {
+	srand(time(0));
+	random_shuffle(typeBlock.begin(), typeBlock.end());
+	random = rand() % typeBlock.size();
+	if (typeBlock[random] != choose) choose = typeBlock[random];
+	else choose = typeBlock[random / 2];
+}
+Block block, nextblock;
+void createBlock(int oldChoose) {
+	//----------------------------------------------------------------------
+	slot.clearNext();
+	block = nextblock;
+	randomBlock();
+	if (keep == 1 && !slot.isShiftEmpty()) {
+		keep = 0;
+		swap(keepCurrent, oldChoose);
+		oldChoose = choose;
+	}
+	nextblock = Block(col[choose]);
+	//----------------------------------------------------------------------
+	if (oldChoose == 0) { // ---
 		board.addblocks(block, 1, 3);
 		board.addblocks(block, 1, 4);
 		board.addblocks(block, 1, 5);
 		board.addblocks(block, 1, 6);
+		//-----------------------------------
+
 		board.currentPointRow = 0;
 		board.currentPointColumn = 3;
 	}
-	else if (random == 1) {				// -
+	else if (oldChoose == 1) {				// -
 		board.addblocks(block, 2, 1);	// ---
 		board.addblocks(block, 2, 2);
 		board.addblocks(block, 2, 3);
 		board.addblocks(block, 1, 1);
+		//-----------------------------------
+		
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
-	else if (random == 2) {				// --
+	else if (oldChoose == 2) {				// --
 		board.addblocks(block, 1, 1);	// --
 		board.addblocks(block, 1, 2);
 		board.addblocks(block, 2, 1);
 		board.addblocks(block, 2, 2);
+		//-----------------------------------------
+		
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
-	else if (random == 3) {				//  -
+	else if (oldChoose == 3) {				//  -
 		board.addblocks(block, 1, 1);	// ---
 		board.addblocks(block, 1, 2);
 		board.addblocks(block, 1, 3);
 		board.addblocks(block, 2, 2);
+		//-----------------------------------------
+		
+
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
-	else if (random == 4) {				//  --
+	else if (oldChoose == 4) {				//  --
 		board.addblocks(block, 2, 2);	//--
 		board.addblocks(block, 2, 3);
 		board.addblocks(block, 1, 1);
 		board.addblocks(block, 1, 2);
+		//------------------------------------
+		
+
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
-	else if (random == 5) {				//--
+	else if (oldChoose == 5) {				//--
 		board.addblocks(block, 2, 1);	//  --
 		board.addblocks(block, 2, 2);
 		board.addblocks(block, 1, 2);
 		board.addblocks(block, 1, 3);
+		//--------------------------------------
+		
+
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
-	else if(random == 6){
+	else if(oldChoose == 6){
 		board.addblocks(block, 2, 2);	//  -
 		board.addblocks(block, 2, 3);	//---
 		board.addblocks(block, 2, 4);
 		board.addblocks(block, 1, 4);
+		//------------------------------------
+
+
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
@@ -131,13 +170,74 @@ void createBlock(int random,Block block) {
 		board.addblocks(block, 2, 1);	//  -
 		board.addblocks(block, 3, 1);	//  -
 		board.addblocks(block, 4, 1);	//  -
+		//--------------------------------------
+
 		board.currentPointRow = 1;
 		board.currentPointColumn = 0;
 	}
-//	board.addblocks(block, 0, 4);
-//	board.addblocks(block, 0, 5);
-//	board.addblocks(block, 1, 5);
-//	board.addblocks(block, 1, 6);
+
+	if (choose == 0) { // ---
+		
+		slot.addNext(nextblock, 1, 0);
+		slot.addNext(nextblock, 1, 1);
+		slot.addNext(nextblock, 1, 2);
+		slot.addNext(nextblock, 1, 3);
+		//-----------------------------------
+
+	}
+	else if (choose == 1) {				// -
+		
+		slot.addNext(nextblock, 2, 0);
+		slot.addNext(nextblock, 2, 1);
+		slot.addNext(nextblock, 2, 2);
+		slot.addNext(nextblock, 1, 0);
+		
+	}
+	else if (choose == 2) {				// --
+		
+		slot.addNext(nextblock, 1, 1);
+		slot.addNext(nextblock, 1, 2);
+		slot.addNext(nextblock, 2, 1);
+		slot.addNext(nextblock, 2, 2);
+		
+	}
+	else if (choose == 3) {				//  -
+		
+		slot.addNext(nextblock, 1, 0);	// ---
+		slot.addNext(nextblock, 1, 1);
+		slot.addNext(nextblock, 1, 2);
+		slot.addNext(nextblock, 2, 1);
+
+	}
+	else if (choose == 4) {				//  --
+		
+		slot.addNext(nextblock, 2, 1);	//--
+		slot.addNext(nextblock, 2, 2);
+		slot.addNext(nextblock, 1, 0);
+		slot.addNext(nextblock, 1, 1);
+
+	}
+	else if (choose == 5) {				//--
+		
+		slot.addNext(nextblock, 2, 0);	//  --
+		slot.addNext(nextblock, 2, 1);
+		slot.addNext(nextblock, 1, 1);
+		slot.addNext(nextblock, 1, 2);
+
+	}
+	else if (choose == 6) {
+		slot.addNext(nextblock, 2, 1);	//  -
+		slot.addNext(nextblock, 2, 2);	//---
+		slot.addNext(nextblock, 2, 3);
+		slot.addNext(nextblock, 1, 3);
+	}
+	else {
+		slot.addNext(nextblock, 1, 1);
+		slot.addNext(nextblock, 2, 1);
+		slot.addNext(nextblock, 3, 1);
+		slot.addNext(nextblock, 4, 1);
+	}
+
 	glutPostRedisplay();
 }
 void handleArrow(int key,int x,int y) {
@@ -149,15 +249,8 @@ void handleArrow(int key,int x,int y) {
 	}
 	if (key == GLUT_KEY_DOWN) {
 		if (!board.currentColumn.empty()) {
-			if (!board.movedown()) {
-                srand(time(0));
-				random_shuffle(typeBlock.begin(), typeBlock.end());
-				random = rand() % typeBlock.size();
-				if (typeBlock[random] != choose) choose = typeBlock[random];
-				else if(random+1 < typeBlock.size()) choose = typeBlock[random+1];
-				else if(random-1 >= 0) choose = typeBlock[random-1];
-				Block block = Block(col[choose]);
-				createBlock(choose, block);
+			if (!board.movedown()) { 
+				createBlock(choose);
 			}
 
 			board.update();
@@ -189,17 +282,15 @@ void handleKeypress(unsigned char key,int x,int y) {
 	if (key == 's') {
         if(!pressedS){
             pressedS = true;
-            srand(time(0));
-            random_shuffle(typeBlock.begin(), typeBlock.end());
-    //		for(int i = 0;i<typeBlock.size();i++) cout << typeBlock[i] << " ";
-            random = rand() % typeBlock.size();
-            if (typeBlock[random] != choose) choose = typeBlock[random];
-            else if(random+1 < typeBlock.size()) choose = typeBlock[random+1];
-            else if(random-1 >= 0) choose = typeBlock[random-1];
-            Block block = Block(col[choose]);
-            createBlock(choose, block);
+			randomBlock();
+			nextblock = Block(col[choose]);
+
+            createBlock(choose);
             glutPostRedisplay();
         }
+	}
+	if (key == '\/') {
+		keep = 1;
 	}
 }
 void mouseButton(int button, int state, int x, int y) {
@@ -249,6 +340,19 @@ void initRendering() {
 	glEnable(GL_NORMALIZE);
 	col[0]=red,col[1]=green,col[2]=blue,col[3]=yellow,
     col[4]=pink,col[5]=purple,col[6]=brown,col[7]=gray;
+}
+void DrawNext() {
+	Block b = nextblock;
+	for (int i = 0; i < DIM; i++) for(int j=0; j<DIM; j++)  {
+		if (slot.nextblock[i][j]) {
+			glPushMatrix();
+			Block b = slot.nextblocks[i][j];
+			glTranslatef(j * 2 + 17, -i * 2 + 17, 0);    //calculate location
+			glColor3f(b.color[0], b.color[1], b.color[2]);
+			model.Draw();
+			glPopMatrix();
+		}
+	}
 }
 void DrawBorder() {
     glBegin(GL_LINES);
@@ -331,6 +435,7 @@ void drawScene() {
 			0.0,    1.0,    0);
 
 	DrawBorder();
+	DrawNext();
 	int k = 0,ish=0;
 	for (int i = 0; i < 20; i++) {
 		for (int j = 0; j < 10; j++) {
@@ -373,14 +478,8 @@ void update(int value) {
 	if (!board.currentColumn.empty()) {
         speed=(space)?10:1000;
 		if (!board.movedown()) {
-            space=false;
-            srand(time(0));
-            random_shuffle(typeBlock.begin(), typeBlock.end());
-            random = rand() % typeBlock.size();
-            if (typeBlock[random] != choose) choose = typeBlock[random];
-            else choose = typeBlock[random / 2];
-            Block block = Block(col[choose]);
-            createBlock(choose, block);
+            space=false;          
+            createBlock(choose);
 		}
 
 		board.update();
