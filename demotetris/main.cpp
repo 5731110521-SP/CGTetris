@@ -242,17 +242,77 @@ void createBlock(int oldChoose) {
 		slot.addNext(nextblock, 3, 1);
 		slot.addNext(nextblock, 4, 1);
 	}
+	if (keepCurrent == 0) { // ---
 
+	slot.addShift(keepBlock, 1, 0);
+	slot.addShift(keepBlock, 1, 1);
+	slot.addShift(keepBlock, 1, 2);
+	slot.addShift(keepBlock, 1, 3);
+	//-----------------------------------
+
+	}
+	else if (keepCurrent == 1) {				// -
+
+	slot.addShift(keepBlock, 2, 0);
+	slot.addShift(keepBlock, 2, 1);
+	slot.addShift(keepBlock, 2, 2);
+	slot.addShift(keepBlock, 1, 0);
+
+	}
+	else if (keepCurrent == 2) {				// --
+
+	slot.addShift(keepBlock, 1, 1);
+	slot.addShift(keepBlock, 1, 2);
+	slot.addShift(keepBlock, 2, 1);
+	slot.addShift(keepBlock, 2, 2);
+
+	}
+	else if (keepCurrent == 3) {				//  -
+
+	slot.addShift(keepBlock, 1, 0);	// ---
+	slot.addShift(keepBlock, 1, 1);
+	slot.addShift(keepBlock, 1, 2);
+	slot.addShift(keepBlock, 2, 1);
+
+	}
+	else if (keepCurrent == 4) {				//  --
+
+	slot.addShift(keepBlock, 2, 1);	//--
+	slot.addShift(keepBlock, 2, 2);
+	slot.addShift(keepBlock, 1, 0);
+	slot.addShift(keepBlock, 1, 1);
+
+	}
+	else if (keepCurrent == 5) {				//--
+
+	slot.addShift(keepBlock, 2, 0);	//  --
+	slot.addShift(keepBlock, 2, 1);
+	slot.addShift(keepBlock, 1, 1);
+	slot.addShift(keepBlock, 1, 2);
+
+	}
+	else if (keepCurrent == 6) {
+	slot.addShift(keepBlock, 2, 1);	//  -
+	slot.addShift(keepBlock, 2, 2);	//---
+	slot.addShift(keepBlock, 2, 3);
+	slot.addShift(keepBlock, 1, 3);
+	}
+	else {
+	slot.addShift(keepBlock, 1, 1);
+	slot.addShift(keepBlock, 2, 1);
+	slot.addShift(keepBlock, 3, 1);
+	slot.addShift(keepBlock, 4, 1);
+	}
 	glutPostRedisplay();
 }
 void handleArrow(int key,int x,int y) {
-	if (!pause && key == GLUT_KEY_LEFT) {
+	if (!gameover&&!pause && key == GLUT_KEY_LEFT) {
 		if (!board.currentColumn.empty()) {
 			board.moveblock(-1,0);
 			glutPostRedisplay();
 		}
 	}
-	if (!pause && key == GLUT_KEY_DOWN) {
+	if (!gameover&&!pause && key == GLUT_KEY_DOWN) {
 		if (!board.currentColumn.empty()) {
 			if (!board.movedown()) {
 				createBlock(choose);
@@ -262,13 +322,13 @@ void handleArrow(int key,int x,int y) {
 			glutPostRedisplay();
 		}
 	}
-	if (!pause && key == GLUT_KEY_RIGHT) {
+	if (!gameover&&!pause && key == GLUT_KEY_RIGHT) {
 		if (!board.currentColumn.empty()) {
 			board.moveblock(1,0);
 			glutPostRedisplay();
 		}
 	}
-	if (!pause && key == GLUT_KEY_UP) {
+	if (!gameover&&!pause && key == GLUT_KEY_UP) {
 		if (!board.currentColumn.empty()) {
 			board.rotateBlock();
 			glutPostRedisplay();
@@ -327,6 +387,9 @@ void handleKeypress(unsigned char key,int x,int y) {
 	}
 	if (key == 'p') {
         pause = !pause;
+	}
+	if (key == 'x') {
+        if(!pressedX) pressedX=true;
 	}
 }
 void mouseButton(int button, int state, int x, int y) {
@@ -401,7 +464,7 @@ void DrawNext() {
 	}
 }
 void DrawKeep() {
-	Block b = keepblock;
+	Block b = keepBlock;
 	for (int i = 0; i < DIM; i++) for(int j=0; j<DIM; j++)  {
 		if (slot.shiftblock[i][j]) {
 			glPushMatrix();
@@ -667,6 +730,7 @@ void drawScene() {
 	DrawGameBoard();
 	DrawHome();
 	DrawNext();
+//	DrawKeep();
 
 	glutSwapBuffers();
 }
@@ -705,7 +769,7 @@ void updateframe(int value) {
     glutTimerFunc(10, updateframe, 0);
 }
 void update(int value) {
-	if (!pause&&!board.currentColumn.empty()) {
+	if (!gameover&&!pause&&!board.currentColumn.empty()) {
         speed=(space)?10:1000;
 		if (!board.movedown()) {
             space=false;
