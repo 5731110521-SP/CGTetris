@@ -1,30 +1,5 @@
-﻿  main.cpp
-main.cpp(50): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
-main.cpp(50): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
-main.cpp(54): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
-main.cpp(54): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
-main.cpp(56): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
-main.cpp(56): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
-main.cpp(74): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-main.cpp(324): warning C4129: '/': unrecognized character escape sequence
-main.cpp(349): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-main.cpp(388): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(397): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(424): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(425): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(426): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(427): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(428): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(429): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(478): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(487): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(496): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(498): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-main.cpp(515): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(522): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(638): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(649): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(663): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-main.cpp(664): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+﻿  board.cpp
+board.cpp(28): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+board.cpp(29): warning C4804: '<=': unsafe use of type 'bool' in operation
   CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.exe
   CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.pdb (Full PDB)

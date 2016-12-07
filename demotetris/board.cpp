@@ -258,8 +258,10 @@ void Board::removeCurrent() {
 		}
 		currentRow.clear();
 		currentColumn.clear();
+		currentDepth.clear();
 		shadowrow.clear();
 		shadowcolumn.clear();
+		shadowDepth.clear();
 }
 
 bool Board::movedown()
