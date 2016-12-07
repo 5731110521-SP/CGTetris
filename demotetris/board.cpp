@@ -239,8 +239,8 @@ void Board::rotateBlock()
 
 void Board::removeCurrent() {
 		for (int i = 0; i < 4; i++) {
-			boardCurrent[currentRow[i]][currentColumn[i]] = false;
-			boardShadow[shadowrow[i]][shadowcolumn[i]] = false;
+			boardCurrent[currentRow[i]][currentColumn[i]][currentDepth[i]] = false;
+			boardShadow[shadowrow[i]][shadowcolumn[i]][currentDepth[i]] = false;
 		}
 		currentRow.clear();
 		currentColumn.clear();

@@ -318,26 +318,28 @@ void handleKeypress(unsigned char key,int x,int y) {
         }
 	}
 	if (key == 'k') {
-		board.removeCurrent();
-		if (slot.isShiftEmpty()) {
-			keepCurrent = prevChoose;
-			keepBlock = block;
-			for (int i = 0; i < DIM; i++) for (int j = 0; j < DIM; j++) {
-				slot.shiftblock[i][j] = true;
+		if (!board.currentColumn.empty()) {
+			board.removeCurrent();
+			if (slot.isShiftEmpty()) {
+				keepCurrent = prevChoose;
+				keepBlock = block;
+				for (int i = 0; i < DIM; i++) for (int j = 0; j < DIM; j++) {
+					slot.shiftblock[i][j] = true;
+				}
+				createBlock(choose);
 			}
-			createBlock(choose);
-		}
-		else if (!slot.isShiftEmpty()) {
-			Block tmp = block;
-			block = keepBlock;
-			keepBlock = tmp;
-			int t = keepCurrent;
-			cout << "kc = " << t << endl;
-			cout << "pv = " << prevChoose << endl;
-			keepCurrent = prevChoose;
-			prevChoose = t;
-			keep = 1;
-			createBlock(prevChoose);
+			else if (!slot.isShiftEmpty()) {
+				Block tmp = block;
+				block = keepBlock;
+				keepBlock = tmp;
+				int t = keepCurrent;
+				cout << "kc = " << t << endl;
+				cout << "pv = " << prevChoose << endl;
+				keepCurrent = prevChoose;
+				prevChoose = t;
+				keep = 1;
+				createBlock(prevChoose);
+			}
 		}
 	}
 	if (key == 'a') {

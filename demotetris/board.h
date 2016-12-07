@@ -13,7 +13,7 @@
 
 #define ROW 20
 #define COLUMN 10
-#define DEPTH 10
+#define DEPTH 5
 
 using namespace std;
 
