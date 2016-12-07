@@ -34,8 +34,6 @@ public:
 	vector<int> currentColumn;
 	vector<int> currentDepth;
 
-	int randDepth;
-
 	Board();
 
 	void addblocks(Block b, int row, int column,int depth);

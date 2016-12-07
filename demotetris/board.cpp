@@ -45,7 +45,6 @@ void Board::addblocks(Block b, int row, int column,int depth)
 	shadowcolumn.push_back(column + randomColumn);
 	shadowDepth.push_back(depth + randomDepth);
 
-	randDepth=randomDepth;
 	if (shadowcolumn.size() == 4) {
 		while (movedownShadow());
 	}
@@ -64,7 +63,7 @@ void Board::addblocks(Block b, int row, int column,int depth)
 		cout << endl;
 	}
 	cout << endl;
-
+	
 	for (int i = 0; i < ROW; i++) {
 		for (int j = 0; j < COLUMN; j++) {
 			for (int k = 0; k < DEPTH; k++) cout << board[i][j][k] << " ";
@@ -228,7 +227,7 @@ void Board::rotateBlock()
 	for (int i = 0; i < 4; i++) {
 		boardCurrent[currentRow[i]][currentColumn[i]][currentDepth[i]] = false;
 		pair<int, int> rc = getRotateTo(currentRow[i] - currentPointRow, currentColumn[i] - currentPointColumn);
-		blocks[rc.first + currentPointRow][rc.second + currentPointColumn][currentDepth[i]]
+		blocks[rc.first + currentPointRow][rc.second + currentPointColumn][currentDepth[i]] 
 			= blocks[currentRow[i]][currentColumn[i]][currentDepth[i]];
 		currentRow[i] = rc.first + currentPointRow;
 		currentColumn[i] = rc.second + currentPointColumn;

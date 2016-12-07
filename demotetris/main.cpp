@@ -39,7 +39,7 @@ int current=0;
 int prevChoose;
 int random;
 int prevType,nextType,keepCurrent,keep=-1;
-bool pressedS = false,start=false,pause=false,gameover=false,pressedX=false;
+bool pressedS = false,start=false,pause=false;
 vector<int> typeBlock = { 0,1,2,3,4,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
 Model_OBJ model,number[10],wire;
@@ -121,8 +121,6 @@ void createBlock(int oldChoose) {
 	cout << "choose = " << choose << endl;
 	//----------------------------------------------------------------------
 	if (oldChoose == 0) { // ---
-        if(board.board[1][0][board.randDepth]||board.board[1][1][board.randDepth]||
-           board.board[1][2][board.randDepth]||board.board[1][3][board.randDepth]) gameover=true;
 		board.addblocks(block, 1, 0 ,0);
 		board.addblocks(block, 1, 1 ,0);
 		board.addblocks(block, 1, 2 ,0);
@@ -130,8 +128,6 @@ void createBlock(int oldChoose) {
 		//-----------------------------------
 	}
 	else if (oldChoose == 1) {				// -
-	    if(board.board[2][1][board.randDepth]||board.board[2][2][board.randDepth]||
-           board.board[2][3][board.randDepth]||board.board[1][1][board.randDepth]) gameover=true;
 		board.addblocks(block, 2, 1,0);	// ---
 		board.addblocks(block, 2, 2,0);
 		board.addblocks(block, 2, 3,0);
@@ -139,48 +135,36 @@ void createBlock(int oldChoose) {
 		//-----------------------------------
 	}
 	else if (oldChoose == 2) {				// --
-	    if(board.board[1][1][board.randDepth]||board.board[1][2][board.randDepth]||
-            board.board[2][1][board.randDepth]||board.board[2][2][board.randDepth]) gameover=true;
 		board.addblocks(block, 1, 1,0);	// --
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 2, 1,0);
 		board.addblocks(block, 2, 2,0);
 	}
 	else if (oldChoose == 3) {				//  -
-	    if(board.board[1][1][board.randDepth]||board.board[1][2][board.randDepth]||
-            board.board[1][3][board.randDepth]||board.board[2][2][board.randDepth]) gameover=true;
 		board.addblocks(block, 1, 1,0);	// ---
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 1, 3,0);
 		board.addblocks(block, 2, 2,0);
 	}
 	else if (oldChoose == 4) {				//  --
-	    if(board.board[2][2][board.randDepth]||board.board[2][3][board.randDepth]||
-            board.board[1][1][board.randDepth]||board.board[1][2][board.randDepth]) gameover=true;
 		board.addblocks(block, 2, 2,0);	//--
 		board.addblocks(block, 2, 3,0);
 		board.addblocks(block, 1, 1,0);
 		board.addblocks(block, 1, 2,0);
 	}
 	else if (oldChoose == 5) {				//--
-	    if(board.board[2][1][board.randDepth]||board.board[2][2][board.randDepth]||
-            board.board[1][2][board.randDepth]||board.board[1][3][board.randDepth]) gameover=true;
 		board.addblocks(block, 2, 1,0);	//  --
 		board.addblocks(block, 2, 2,0);
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 1, 3,0);
 	}
 	else if(oldChoose == 6){
-	    if(board.board[2][2][board.randDepth]||board.board[2][3][board.randDepth]||
-            board.board[2][4][board.randDepth]||board.board[1][4][board.randDepth]) gameover=true;
 		board.addblocks(block, 2, 2,0);	//  -
 		board.addblocks(block, 2, 3,0);	//---
 		board.addblocks(block, 2, 4,0);
 		board.addblocks(block, 1, 4,0);
 	}
 	else {
-	    if(board.board[1][1][board.randDepth]||board.board[2][1][board.randDepth]||
-            board.board[3][1][board.randDepth]||board.board[4][1][board.randDepth]) gameover=true;
 		board.addblocks(block, 1, 1,0);	//  -
 		board.addblocks(block, 2, 1,0);	//  -
 		board.addblocks(block, 3, 1,0);	//  -
@@ -252,13 +236,13 @@ void createBlock(int oldChoose) {
 	glutPostRedisplay();
 }
 void handleArrow(int key,int x,int y) {
-	if (!gameover && !pause && key == GLUT_KEY_LEFT) {
+	if (!pause && key == GLUT_KEY_LEFT) {
 		if (!board.currentColumn.empty()) {
 			board.moveblock(-1,0);
 			glutPostRedisplay();
 		}
 	}
-	if (!gameover && !pause && key == GLUT_KEY_DOWN) {
+	if (!pause && key == GLUT_KEY_DOWN) {
 		if (!board.currentColumn.empty()) {
 			if (!board.movedown()) {
 				createBlock(choose);
@@ -268,13 +252,13 @@ void handleArrow(int key,int x,int y) {
 			glutPostRedisplay();
 		}
 	}
-	if (!gameover && !pause && key == GLUT_KEY_RIGHT) {
+	if (!pause && key == GLUT_KEY_RIGHT) {
 		if (!board.currentColumn.empty()) {
 			board.moveblock(1,0);
 			glutPostRedisplay();
 		}
 	}
-	if (!gameover && !pause && key == GLUT_KEY_UP) {
+	if (!pause && key == GLUT_KEY_UP) {
 		if (!board.currentColumn.empty()) {
 			board.rotateBlock();
 			glutPostRedisplay();
@@ -342,9 +326,6 @@ void handleKeypress(unsigned char key,int x,int y) {
 	}
 	if (key == 's') {
         if(!start) start = true;
-	}
-	if (key == 'x') {
-        if(!pressedX) pressedX = true;
 	}
 	if (key == 'p') {
         pause = !pause;
@@ -528,22 +509,6 @@ void DrawGameBoard() {
                     glPopMatrix();
                     glPopMatrix();
                 }
-                else if (gameover) {
-                    glPushMatrix();
-                    glColor3fv(white);
-                    glTranslatef(j*2-BOARD_X,-i*2+BOARD_Y, 0);    //calculate location
-                    //draw score
-                    glPushMatrix();
-                    glScalef(0.5,0.5,0.5);
-                    if (i==11&&j==2) alphabet['p'].Draw();
-                    else if (i==11&&j==3) alphabet['r'].Draw();
-                    else if (i==11&&j==4) alphabet['e'].Draw();
-                    else if (i==11&&j==5) alphabet['s'].Draw();
-                    else if (i==11&&j==6) alphabet['s'].Draw();
-                    glPopMatrix();
-                    if (i==11&&j==7) alphabet['x'].Draw();
-                    glPopMatrix();
-                }
 			}
 		}
 	}
@@ -659,7 +624,7 @@ void drawScene() {
 
     gluLookAt(
 		x, 1, z,               //camera location @ (x,1,z)
-		x - lx, 1, z - lz,     // looking along vector (lx,1,lz)
+		x - lx, 1, z - lz,               // looking along vector (lx,1,lz)
 		0, 1, 0);              // with up vector (0,1,0)
 
 	DrawGameBoard();
@@ -687,19 +652,11 @@ void updateframe(int value) {
             glutPostRedisplay();
         }
     }
-    if (pressedX) {
-        dy-=0.5;
-        if(dy<=-60) {
-            pressedX = false;
-            pressedS = true;
-            glutPostRedisplay();
-        }
-    }
     glutPostRedisplay();
     glutTimerFunc(10, updateframe, 0);
 }
 void update(int value) {
-	if (!gameover&&!pause&&!board.currentColumn.empty()) {
+	if (!pause&&!board.currentColumn.empty()) {
         speed=(space)?10:1000;
 		if (!board.movedown()) {
             space=false;
