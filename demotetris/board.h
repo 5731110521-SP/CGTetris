@@ -11,28 +11,34 @@
 #include <time.h>
 #include "block.h"
 
+#define ROW 20
+#define COLUMN 10
+#define DEPTH 10
+
 using namespace std;
 
 class Board {
 public:
-	bool board[20][10]; //have something on board?
-	bool boardCurrent[20][10];
+	bool board[ROW][COLUMN][DEPTH]; //have something on board?
+	bool boardCurrent[ROW][COLUMN][DEPTH];
 
-	bool boardShadow[20][10];
-	Block blocks[20][10]; //blocks on the board
+	bool boardShadow[ROW][COLUMN][DEPTH];
+	Block blocks[ROW][COLUMN][DEPTH]; //blocks on the board
 	int currentPointRow;
 	int currentPointColumn;
+	int currentPointDepth;
 	vector<int> shadowrow;
 	vector<int> shadowcolumn;
+	vector<int> shadowDepth;
 	vector<int> currentRow;
 	vector<int> currentColumn;
+	vector<int> currentDepth;
 
 	Board();
 
-	void addblocks(Block b, int row, int column);
-	bool onCurrent(int row, int column);
-	bool canmoveblock(int row, int column);
-	void moveblock(int left);
+	void addblocks(Block b, int row, int column,int depth);
+	bool canmoveblock(int row, int column, int depth);
+	void moveblock(int column,int depth);
 
 	bool canmoveShadow(int row, int column);
 	bool movedownShadow();

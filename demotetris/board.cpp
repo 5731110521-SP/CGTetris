@@ -6,10 +6,10 @@
 using namespace std;
 
 Board::Board() {
-	for (int i = 0; i < 20; i++) for (int j = 0; j < 10; j++) {
-		board[i][j] = false;
-		boardCurrent[i][j] = false;
-		boardShadow[i][j] = false;
+	for (int i = 0; i < ROW; i++) for (int j = 0; j < COLUMN; j++) for (int k = 0; k < DEPTH; k++) {
+		board[i][j][k] = false;
+		boardCurrent[i][j][k] = false;
+		boardShadow[i][j][k] = false;
 	}
 	/*Block block = Block();
 	addblocks(block, 4, 0);
@@ -18,20 +18,21 @@ Board::Board() {
 	addblocks(block, 6, 1);*/
 }
 
-void Board::addblocks(Block b, int row, int column)
+void Board::addblocks(Block b, int row, int column,int depth)
 {
-	boardCurrent[row][column] = true;
-	blocks[row][column] = b;
+	boardCurrent[row][column][depth] = true;
+	blocks[row][column][depth] = b;
 	currentRow.push_back(row);
 	currentColumn.push_back(column);
+	currentDepth.push_back(depth);
 
-	boardShadow[row][column]=true;
+	boardShadow[row][column][depth] =true;
 	shadowrow.push_back(row);
 	shadowcolumn.push_back(column);
+	shadowDepth.push_back(depth);
 
 	if (shadowcolumn.size() == 4) {
 		while (movedownShadow());
-
 	}
 
 	//add shadow
@@ -48,37 +49,32 @@ void Board::addblocks(Block b, int row, int column)
 		cout << endl;
 	}
 	cout << endl;
-	for (int i = 0; i < 20; i++) {
-		for (int j = 0; j < 10; j++) cout << board[i][j] << " ";
+	
+	for (int i = 0; i < ROW; i++) {
+		for (int j = 0; j < COLUMN; j++) {
+			for (int k = 0; k < DEPTH; k++) cout << board[i][j][k] << " ";
+		}
 		cout << endl;
 	}
 	cout << endl;
 	*/
 }
 
-bool Board::onCurrent(int row, int column)
-{
-	/*for (int i = 0; i < 4; i++) {
-	if (currentRow[i] == row && currentColumn[i] == column)return true;
-	}*/
-	return boardCurrent[row][column];
-	//return false;
-}
-
-bool Board::canmoveblock(int row, int column)
+bool Board::canmoveblock(int row, int column, int depth)
 {
 	for (int i = 0; i < 4; i++) {
 		//if (board[currentRow[i] + row][currentColumn[i] + column] && !onCurrent(currentRow[i] + row, currentColumn[i] + column)) return false;
-		if (currentRow[i] + row<0 || currentRow[i] + row >= 20
-			|| currentColumn[i] + column<0 || currentColumn[i] + column >= 10
-			|| board[currentRow[i] + row][currentColumn[i] + column]) return false;
+		if (currentRow[i] + row<0 || currentRow[i] + row >= ROW
+			|| currentColumn[i] + column<0 || currentColumn[i] + column >= COLUMN
+			|| currentDepth[i] + depth<0 || currentDepth[i] + depth >= DEPTH
+			|| board[currentRow[i] + row][currentColumn[i] + column][currentDepth[i] + depth]) return false;
 	}
 	return true;
 }
 
-void Board::moveblock(int column) //left=-1 right=1
+void Board::moveblock(int column,int depth) //left=-1 right=1
 {
-	if (!canmoveblock(0, column)) return;
+	if (!canmoveblock(0, column, depth)) return;
 	/*for (int i = 0; i < 4; i++) {
 	//board[currentRow[i]][currentColumn[i]] = false;
 	//board[currentRow[i]][currentColumn[i]+column] = true;
@@ -89,51 +85,65 @@ void Board::moveblock(int column) //left=-1 right=1
 	}*/
 	if (column == -1) {
 		int k = 0;
-		for (int j = 0; j < 10; j++) {
-			if (k >= 4)break;
-			for (int i = 0; i < 20; i++) {
-				if (boardCurrent[i][j]) {
-					boardCurrent[i][j] = false;
-					boardCurrent[i][j - 1] = true;
-					blocks[i][j - 1] = blocks[i][j];
-					k++;
-					if (k >= 4) {
-						currentPointColumn -= 1;
-						for (int i = 0; i < 4; i++) currentColumn[i] -= 1;
-						break;
+		for (int j = 0; j < COLUMN; j++) {
+			for (int i = 0; i < ROW; i++) {
+				for (int l = currentDepth[0]; l < currentDepth[0]+1; l++) {
+					if (boardCurrent[i][j][l]) {
+						boardCurrent[i][j][l] = false;
+						boardCurrent[i][j - 1][l] = true;
+						blocks[i][j - 1][l] = blocks[i][j][l];
+						k++;
+						if (k >= 4) {
+							currentPointColumn -= 1;
+							for (int i = 0; i < 4; i++) currentColumn[i] -= 1;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	else if(column==1) {
+		int k = 0;
+		for (int j = COLUMN-1; j >= 0; j--) {
+			for (int i = 0; i < ROW; i++) {
+				for (int l = currentDepth[0]; l < currentDepth[0] + 1; l++) {
+					if (boardCurrent[i][j][l]) {
+						boardCurrent[i][j][l] = false;
+						boardCurrent[i][j + 1][l] = true;
+						blocks[i][j + 1][l] = blocks[i][j][l];
+						k++;
+						if (k >= 4) {
+							currentPointColumn += 1;
+							for (int i = 0; i < 4; i++) currentColumn[i] += 1;
+							break;
+						}
 					}
 				}
 			}
 		}
 	}
 	else {
-		int k = 0;
-		for (int j = 9; j >= 0; j--) {
-			if (k >= 4)break;
-			for (int i = 0; i < 20; i++) {
-				if (boardCurrent[i][j]) {
-					boardCurrent[i][j] = false;
-					boardCurrent[i][j + 1] = true;
-					blocks[i][j + 1] = blocks[i][j];
-					k++;
-					if (k >= 4) {
-						currentPointColumn += 1;
-						for (int i = 0; i < 4; i++) currentColumn[i] += 1;
-						break;
-					}
-				}
-			}
+		for (int i = 0; i < 4; i++) {
+			boardCurrent[currentRow[i]][currentColumn[i]][currentDepth[i]] = false;
+			boardCurrent[currentRow[i]][currentColumn[i]][currentDepth[i]+depth] = true;
+			blocks[currentRow[i]][currentColumn[i]][currentDepth[i] + depth]
+				= blocks[currentRow[i]][currentColumn[i]][currentDepth[i]];
+			currentDepth[i] += depth;
 		}
 	}
+
 	for (int i = 0; i < 4; i++) {
-		boardShadow[shadowrow[i]][shadowcolumn[i]] = false;
+		boardShadow[shadowrow[i]][shadowcolumn[i]][shadowDepth[i]] = false;
 	}
 	shadowrow.clear();
 	shadowcolumn.clear();
+	shadowDepth.clear();
 	for (int i = 0; i < 4; i++) {
 		shadowrow.push_back(currentRow[i]);
 		shadowcolumn.push_back(currentColumn[i]);
-		boardShadow[shadowrow[i]][shadowcolumn[i]] = true;
+		shadowDepth.push_back(currentDepth[i]);
+		boardShadow[shadowrow[i]][shadowcolumn[i]][shadowDepth[i]] = true;
 	}
 	while (movedownShadow());
 }
@@ -143,7 +153,7 @@ bool Board::canmoveShadow(int row, int column)
 	for (int i = 0; i < 4; i++) {
 		if (shadowrow[i] + row<0 || shadowrow[i] + row >= 20
 			|| shadowcolumn[i] + column<0 || shadowcolumn[i] + column >= 10
-			|| board[shadowrow[i] + row][shadowcolumn[i] + column]) return false;
+			|| board[shadowrow[i] + row][shadowcolumn[i] + column][shadowDepth[i]]) return false;
 	}
 	return true;
 }
@@ -153,12 +163,13 @@ bool Board::movedownShadow()
 	if (!canmoveShadow(1, 0)) {
 		return false;
 	}
+	/*
 	int k = 0;
 	for (int i = 19; i >= 0; i--) {
 		for (int j = 0; j < 10; j++) {
-			if (boardShadow[i][j]) {
-				boardShadow[i][j] = false;
-				boardShadow[i + 1][j] = true;
+			if (boardShadow[i][j][0]) {
+				boardShadow[i][j][0] = false;
+				boardShadow[i + 1][j][0] = true;
 				k++;
 				if (k >= 4) {
 					for (int i = 0; i < 4; i++) shadowrow[i] += 1;
@@ -166,6 +177,14 @@ bool Board::movedownShadow()
 				}
 			}
 		}
+	}
+	*/
+	for (int i = 0; i < 4; i++) {
+		boardShadow[shadowrow[i]][shadowcolumn[i]][shadowDepth[i]] = false;
+		shadowrow[i] += 1;
+	}
+	for (int i = 0; i < 4; i++) {
+		boardShadow[shadowrow[i]][shadowcolumn[i]][shadowDepth[i]] = true;
 	}
 
 	return true;
@@ -182,7 +201,7 @@ bool Board::canRotateBlock()
 		pair<int, int> rc = getRotateTo(currentRow[i] - currentPointRow, currentColumn[i] - currentPointColumn);
 		if (rc.first + currentPointRow<0 || rc.first + currentPointRow >= 20
 			|| rc.second + currentPointColumn<0 || rc.second + currentPointColumn >= 10
-			|| board[rc.first + currentPointRow][rc.second + currentPointColumn]) return false;
+			|| board[rc.first + currentPointRow][rc.second + currentPointColumn][currentDepth[i]]) return false;
 	}
 	return true;
 }
@@ -192,24 +211,27 @@ void Board::rotateBlock()
 	if (!canRotateBlock()) return;
 
 	for (int i = 0; i < 4; i++) {
-		boardCurrent[currentRow[i]][currentColumn[i]] = false;
+		boardCurrent[currentRow[i]][currentColumn[i]][currentDepth[i]] = false;
 		pair<int, int> rc = getRotateTo(currentRow[i] - currentPointRow, currentColumn[i] - currentPointColumn);
-		blocks[rc.first + currentPointRow][rc.second + currentPointColumn] = blocks[currentRow[i]][currentColumn[i]];
+		blocks[rc.first + currentPointRow][rc.second + currentPointColumn][currentDepth[i]] 
+			= blocks[currentRow[i]][currentColumn[i]][currentDepth[i]];
 		currentRow[i] = rc.first + currentPointRow;
 		currentColumn[i] = rc.second + currentPointColumn;
 	}
 
 	for (int i = 0; i < 4; i++) {
-		boardCurrent[currentRow[i]][currentColumn[i]] = true;
-		boardShadow[shadowrow[i]][shadowcolumn[i]] = false;
+		boardCurrent[currentRow[i]][currentColumn[i]][currentDepth[i]] = true;
+		boardShadow[shadowrow[i]][shadowcolumn[i]][shadowDepth[i]] = false;
 	}
 
 	shadowrow.clear();
 	shadowcolumn.clear();
+	shadowDepth.clear();
 	for (int i = 0; i < 4; i++) {
 		shadowrow.push_back(currentRow[i]);
 		shadowcolumn.push_back(currentColumn[i]);
-		boardShadow[shadowrow[i]][shadowcolumn[i]] = true;
+		shadowDepth.push_back(currentDepth[i]);
+		boardShadow[shadowrow[i]][shadowcolumn[i]][shadowDepth[i]] = true;
 	}
 	while (movedownShadow());
 
@@ -217,30 +239,45 @@ void Board::rotateBlock()
 
 bool Board::movedown()
 {
-	if (!canmoveblock(1, 0)) {
+	if (!canmoveblock(1, 0, 0)) {
 		for (int i = 0; i < 4; i++) {
-			board[currentRow[i]][currentColumn[i]] = true;
-			boardCurrent[currentRow[i]][currentColumn[i]] = false;
-			boardShadow[shadowrow[i]][shadowcolumn[i]] = false;
+			board[currentRow[i]][currentColumn[i]][currentDepth[i]] = true;
+			boardCurrent[currentRow[i]][currentColumn[i]][currentDepth[i]] = false;
+			boardShadow[shadowrow[i]][shadowcolumn[i]][currentDepth[i]] = false;
 		}
 		currentRow.clear();
 		currentColumn.clear();
+		currentDepth.clear();
 		shadowrow.clear();
 		shadowcolumn.clear();
+		shadowDepth.clear();
 		return false;
 	}
 	int k = 0;
-	for (int i = 19; i >= 0; i--) {
-		for (int j = 0; j < 10; j++) {
-			if (boardCurrent[i][j]) {
-				boardCurrent[i][j] = false;
-				boardCurrent[i + 1][j] = true;
-				blocks[i + 1][j] = blocks[i][j];
-				k++;
-				if (k >= 4) {
-					currentPointRow += 1;
-					for (int i = 0; i < 4; i++) currentRow[i] += 1;
-					return true;
+	for (int i = ROW-1; i >= 0; i--) {
+		for (int j = 0; j < COLUMN; j++) {
+			for (int l = currentDepth[0]; l < currentDepth[0] + 1; l++) {
+				if (boardCurrent[i][j][l]) {
+					boardCurrent[i][j][l] = false;
+					boardCurrent[i + 1][j][l] = true;
+					blocks[i + 1][j][l] = blocks[i][j][l];
+					k++;
+					if (k >= 4) {
+						currentPointRow += 1;
+						for (int i = 0; i < 4; i++) currentRow[i] += 1;
+						/*for (int i = 0; i < ROW; i++) {
+								for (int k = 0; k < DEPTH; k++) {
+									for (int j = 0; j < COLUMN; j++) {
+										if (board[i][j][k] || boardCurrent[i][j][k])cout << 1 << " ";
+										else cout << 0 << " ";
+									}
+									cout << " ";
+								}
+								cout << endl;
+							}
+							cout << endl;*/
+						return true;
+					}
 				}
 			}
 		}
@@ -252,25 +289,27 @@ bool Board::movedown()
 void Board::update()
 {
 	bool all;
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < ROW; i++) {
 		all = true;
-		for (int j = 0; j < 10; j++) {
-			if (!board[i][j]) {
+		for (int j = 0; j < COLUMN; j++) for (int k = 0; k < DEPTH; k++) {
+			if (!board[i][j][k]) {
 				all = false;
 				break;
 			}
 		}
 		if (all) {
-			for (int j = 0; j < 10; j++) {
-				board[i][j] = false;
-				for (int k = i - 1; k >= 0; k--) {
-					if (board[k][j]) {
-						board[k][j] = false;
-						board[k + 1][j] = true;
-						blocks[k + 1][j] = blocks[k][j];
-					}
-					else {
-						board[k + 1][j] = false;
+			for (int j = 0; j < COLUMN; j++) {
+				for (int l = 0; l < DEPTH; l++) {
+					board[i][j][l] = false;
+					for (int k = i - 1; k >= 0; k--) {
+						if (board[k][j][l]) {
+							board[k][j][l] = false;
+							board[k + 1][j][l] = true;
+							blocks[k + 1][j][l] = blocks[k][j][l];
+						}
+						else {
+							board[k + 1][j][l] = false;
+						}
 					}
 				}
 			}

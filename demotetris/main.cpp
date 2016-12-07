@@ -27,9 +27,6 @@ using namespace std;
 
 #define TO_RAD 3.1415926535897932384626433832795/180.0
 #define BLOCK_NUMBER 1000
-#define WIDTH 10
-#define HEIGHT 10
-#define DEPTH 20
 
 Board board;
 Slot slot;
@@ -53,7 +50,7 @@ GLfloat yellow[] = { 0.3,0.3,0 };
 GLfloat pink[] = { 0.5,0,0.5 };
 GLfloat purple[] = { 1,0,1 };
 GLfloat brown[] = { 0,1,1 };
-GLfloat gray[] = { 0.1,0.1,0.1 };
+GLfloat gray[] = { 0.2,0.2,0.2 };
 GLfloat white[] = { 1,1,1 };
 GLfloat shadow[] = { 0.7,0.7,0.7 };
 map<int,GLfloat*> col;
@@ -92,40 +89,40 @@ void createBlock(int oldChoose) {
 	nextblock = Block(col[choose]);
 	//----------------------------------------------------------------------
 	if (oldChoose == 0) { // ---
-		board.addblocks(block, 1, 3);
-		board.addblocks(block, 1, 4);
-		board.addblocks(block, 1, 5);
-		board.addblocks(block, 1, 6);
+		board.addblocks(block, 1, 3 ,0);
+		board.addblocks(block, 1, 4 ,0);
+		board.addblocks(block, 1, 5 ,0);
+		board.addblocks(block, 1, 6 ,0);
 		//-----------------------------------
 
 		board.currentPointRow = 0;
 		board.currentPointColumn = 3;
 	}
 	else if (oldChoose == 1) {				// -
-		board.addblocks(block, 2, 1);	// ---
-		board.addblocks(block, 2, 2);
-		board.addblocks(block, 2, 3);
-		board.addblocks(block, 1, 1);
+		board.addblocks(block, 2, 1,0);	// ---
+		board.addblocks(block, 2, 2,0);
+		board.addblocks(block, 2, 3,0);
+		board.addblocks(block, 1, 1,0);
 		//-----------------------------------
 		
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
 	else if (oldChoose == 2) {				// --
-		board.addblocks(block, 1, 1);	// --
-		board.addblocks(block, 1, 2);
-		board.addblocks(block, 2, 1);
-		board.addblocks(block, 2, 2);
+		board.addblocks(block, 1, 1,0);	// --
+		board.addblocks(block, 1, 2,0);
+		board.addblocks(block, 2, 1,0);
+		board.addblocks(block, 2, 2,0);
 		//-----------------------------------------
 		
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
 	else if (oldChoose == 3) {				//  -
-		board.addblocks(block, 1, 1);	// ---
-		board.addblocks(block, 1, 2);
-		board.addblocks(block, 1, 3);
-		board.addblocks(block, 2, 2);
+		board.addblocks(block, 1, 1,0);	// ---
+		board.addblocks(block, 1, 2,0);
+		board.addblocks(block, 1, 3,0);
+		board.addblocks(block, 2, 2,0);
 		//-----------------------------------------
 		
 
@@ -133,10 +130,10 @@ void createBlock(int oldChoose) {
 		board.currentPointColumn = 0;
 	}
 	else if (oldChoose == 4) {				//  --
-		board.addblocks(block, 2, 2);	//--
-		board.addblocks(block, 2, 3);
-		board.addblocks(block, 1, 1);
-		board.addblocks(block, 1, 2);
+		board.addblocks(block, 2, 2,0);	//--
+		board.addblocks(block, 2, 3,0);
+		board.addblocks(block, 1, 1,0);
+		board.addblocks(block, 1, 2,0);
 		//------------------------------------
 		
 
@@ -144,10 +141,10 @@ void createBlock(int oldChoose) {
 		board.currentPointColumn = 0;
 	}
 	else if (oldChoose == 5) {				//--
-		board.addblocks(block, 2, 1);	//  --
-		board.addblocks(block, 2, 2);
-		board.addblocks(block, 1, 2);
-		board.addblocks(block, 1, 3);
+		board.addblocks(block, 2, 1,0);	//  --
+		board.addblocks(block, 2, 2,0);
+		board.addblocks(block, 1, 2,0);
+		board.addblocks(block, 1, 3,0);
 		//--------------------------------------
 		
 
@@ -155,10 +152,10 @@ void createBlock(int oldChoose) {
 		board.currentPointColumn = 0;
 	}
 	else if(oldChoose == 6){
-		board.addblocks(block, 2, 2);	//  -
-		board.addblocks(block, 2, 3);	//---
-		board.addblocks(block, 2, 4);
-		board.addblocks(block, 1, 4);
+		board.addblocks(block, 2, 2,0);	//  -
+		board.addblocks(block, 2, 3,0);	//---
+		board.addblocks(block, 2, 4,0);
+		board.addblocks(block, 1, 4,0);
 		//------------------------------------
 
 
@@ -166,10 +163,10 @@ void createBlock(int oldChoose) {
 		board.currentPointColumn = 0;
 	}
 	else {
-		board.addblocks(block, 1, 1);	//  -
-		board.addblocks(block, 2, 1);	//  -
-		board.addblocks(block, 3, 1);	//  -
-		board.addblocks(block, 4, 1);	//  -
+		board.addblocks(block, 1, 1,0);	//  -
+		board.addblocks(block, 2, 1,0);	//  -
+		board.addblocks(block, 3, 1,0);	//  -
+		board.addblocks(block, 4, 1,0);	//  -
 		//--------------------------------------
 
 		board.currentPointRow = 1;
@@ -243,7 +240,7 @@ void createBlock(int oldChoose) {
 void handleArrow(int key,int x,int y) {
 	if (key == GLUT_KEY_LEFT) {
 		if (!board.currentColumn.empty()) {
-			board.moveblock(-1);
+			board.moveblock(-1,0);
 			glutPostRedisplay();
 		}
 	}
@@ -259,7 +256,7 @@ void handleArrow(int key,int x,int y) {
 	}
 	if (key == GLUT_KEY_RIGHT) {
 		if (!board.currentColumn.empty()) {
-			board.moveblock(1);
+			board.moveblock(1,0);
 			glutPostRedisplay();
 		}
 	}
@@ -291,6 +288,18 @@ void handleKeypress(unsigned char key,int x,int y) {
 	}
 	if (key == '\/') {
 		keep = 1;
+	}
+	if (key == 'a') {
+		if (!board.currentColumn.empty()) {
+			board.moveblock(0, 1);
+			glutPostRedisplay();
+		}
+	}
+	if (key == 'z') {
+		if (!board.currentColumn.empty()) {
+			board.moveblock(0, -1);
+			glutPostRedisplay();
+		}
 	}
 }
 void mouseButton(int button, int state, int x, int y) {
@@ -366,19 +375,30 @@ void DrawBorder() {
 //        glVertex3f(-6,-22,-1);
         glEnd();
 
-        for(int i=0; i<=21; i++) for(int j=0; j<=11; j++) {
-            if(i==0||i==21||j==0||j==11) {
+        for(int i=0; i<=ROW; i++)for (int j = 0; j <= COLUMN; j++)for (int k = 0; k <= DEPTH; k++) {
+            
                 glPushMatrix();
-                Block b = Block(white);
-                if(i==0) glTranslatef(j*2-7,19,0);
-                else if(i==21) glTranslatef(j*2-7,-23,0);
-                else if(j==0) glTranslatef(-7,-i*2+19,0);
-                else if(j==11) glTranslatef(15,-i*2+19,0);
+                //Block b = Block(white);
+                //if(i==0) glTranslatef(j*2-7,19,0);
+                //else if(i==21) glTranslatef(j*2-7,-23,0);
+               // else if(j==0) glTranslatef(-7,-i*2+19,0);
+               // else if(j==11) glTranslatef(15,-i*2+19,0);
 //                b.drawCube('t');
-                glColor3f(b.color[0],b.color[1],b.color[2]);
-                model.Draw();
+                //glColor3f(b.color[0],b.color[1],b.color[2]);
+                //model.Draw();
+
+				glLineWidth(0.5);
+				glColor3f(gray[0], gray[1], gray[2]);
+				glBegin(GL_LINES);
+				glVertex3f(-7+1, 19-1-i*2, -k*2+1);
+				glVertex3f(-7+1 + COLUMN * 2, 19-1-i*2, -k*2+1);
+				glVertex3f(-7+1 + j * 2, 19-1, -k * 2+1);
+				glVertex3f(-7+1 + j * 2, 19-1 - ROW * 2, -k * 2+1);
+				glVertex3f(-7+1 + j * 2, 19-1-i*2, 1);
+				glVertex3f(-7+1 + j * 2, 19-1 - i * 2, -DEPTH * 2+1);
+				glEnd();
                 glPopMatrix();
-            }
+            
         }
 }
 void handleResize(int w, int h) {
@@ -436,28 +456,36 @@ void drawScene() {
 
 	DrawBorder();
 	DrawNext();
-	int k = 0,ish=0;
-	for (int i = 0; i < 20; i++) {
-		for (int j = 0; j < 10; j++) {
-			if (board.board[i][j] || board.boardCurrent[i][j]) {
-//				cout << k<< " " <<i << " " << j << endl;
-				k++;
-				glPushMatrix();
-				Block b = board.blocks[i][j];
-				glTranslatef(j*2-5,-i*2+17,0);    //calculate location
-//				b.drawCube('c');
-                glColor3f(b.color[0],b.color[1],b.color[2]);
-                model.Draw();
-				glPopMatrix();
-            }
-            else if (board.boardShadow[i][j]) {
-				glPushMatrix();
-				Block b = Block(shadow);
-				glTranslatef(j * 2 - 5, -i * 2 + 17, 0);    //calculate location
-//				b.drawCube('c');
-				glColor3f(b.color[0], b.color[1], b.color[2]);
-				model.Draw();
-				glPopMatrix();
+	int h=0,ish=0;
+	for (int i = 0; i < ROW; i++) {
+		for (int j = 0; j < COLUMN; j++) {
+			for (int dep = 0; dep < DEPTH; dep++) {
+				//cout << h << " " << i << " " << j << " " << dep << endl;
+				if (board.board[i][j][dep] || board.boardCurrent[i][j][dep]) {
+					//h++;
+					
+				//if (board.board[i][j][0] || board.boardCurrent[i][j][0]) {
+					glPushMatrix();
+					Block b = board.blocks[i][j][dep];
+					//Block b = board.blocks[i][j][0];
+					//glTranslatef(j * 2 - 5, -i * 2 + 17, 0);    //calculate location
+					glTranslatef(j * 2 - 5, -i * 2 + 17, -dep * 2);    //calculate location
+	//				b.drawCube('c');
+					glColor3f(b.color[0], b.color[1], b.color[2]);
+					model.Draw();
+					glPopMatrix();
+				}
+				else if (board.boardShadow[i][j][dep]) {
+				//else if (board.boardShadow[i][j][0]) {
+					glPushMatrix();
+					Block b = Block(shadow);
+					//glTranslatef(j * 2 - 5, -i * 2 + 17, 0);    //calculate location
+					glTranslatef(j * 2 - 5, -i * 2 + 17, -dep * 2);    //calculate location
+	//				b.drawCube('c');
+					glColor3f(b.color[0], b.color[1], b.color[2]);
+					model.Draw();
+					glPopMatrix();
+				}
 			}
 		}
 	}
