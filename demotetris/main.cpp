@@ -53,17 +53,17 @@ GLfloat yellow[] = { 0.3,0.3,0 };
 GLfloat pink[] = { 0.5,0,0.5 };
 GLfloat purple[] = { 1,0,1 };
 GLfloat brown[] = { 0,1,1 };
-GLfloat gray[] = { 0.1,0.1,0.1 };
+GLfloat gray[] = { 0.7,0.7,0.7 };
 GLfloat white[] = { 1,1,1 };
-GLfloat shadow[] = { 0.7,0.7,0.7 };
+GLfloat shadow[] = { 0.4,0.4,0.4 };
 map<int,GLfloat*> col;
 int speed=1000; bool space=false;
 // Camera position
-float x = 0.0, y = -5.0; // initially 5 units south of origin
+float x = 0.0, z = -5.0,dx,dy,dz; // initially 5 units south of origin
 float deltaMove = 0.0; // initially camera doesn't move
 
 // Camera direction
-float lx = 0.0, ly = 1.0; // camera points initially along y-axis
+float lx = 0.0, lz = 1.0; // camera points initially along y-axis
 float angle = 0.0; // angle of rotation for the camera direction
 float deltaAngle = 0.0; // additional angle change when dragging
 
@@ -107,7 +107,7 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 2, 3);
 		board.addblocks(block, 1, 1);
 		//-----------------------------------
-		
+
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
@@ -117,7 +117,7 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 2, 1);
 		board.addblocks(block, 2, 2);
 		//-----------------------------------------
-		
+
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
@@ -127,7 +127,7 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 1, 3);
 		board.addblocks(block, 2, 2);
 		//-----------------------------------------
-		
+
 
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
@@ -138,7 +138,7 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 1, 1);
 		board.addblocks(block, 1, 2);
 		//------------------------------------
-		
+
 
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
@@ -149,7 +149,7 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 1, 2);
 		board.addblocks(block, 1, 3);
 		//--------------------------------------
-		
+
 
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
@@ -177,7 +177,7 @@ void createBlock(int oldChoose) {
 	}
 
 	if (choose == 0) { // ---
-		
+
 		slot.addNext(nextblock, 1, 0);
 		slot.addNext(nextblock, 1, 1);
 		slot.addNext(nextblock, 1, 2);
@@ -186,23 +186,23 @@ void createBlock(int oldChoose) {
 
 	}
 	else if (choose == 1) {				// -
-		
+
 		slot.addNext(nextblock, 2, 0);
 		slot.addNext(nextblock, 2, 1);
 		slot.addNext(nextblock, 2, 2);
 		slot.addNext(nextblock, 1, 0);
-		
+
 	}
 	else if (choose == 2) {				// --
-		
+
 		slot.addNext(nextblock, 1, 1);
 		slot.addNext(nextblock, 1, 2);
 		slot.addNext(nextblock, 2, 1);
 		slot.addNext(nextblock, 2, 2);
-		
+
 	}
 	else if (choose == 3) {				//  -
-		
+
 		slot.addNext(nextblock, 1, 0);	// ---
 		slot.addNext(nextblock, 1, 1);
 		slot.addNext(nextblock, 1, 2);
@@ -210,7 +210,7 @@ void createBlock(int oldChoose) {
 
 	}
 	else if (choose == 4) {				//  --
-		
+
 		slot.addNext(nextblock, 2, 1);	//--
 		slot.addNext(nextblock, 2, 2);
 		slot.addNext(nextblock, 1, 0);
@@ -218,7 +218,7 @@ void createBlock(int oldChoose) {
 
 	}
 	else if (choose == 5) {				//--
-		
+
 		slot.addNext(nextblock, 2, 0);	//  --
 		slot.addNext(nextblock, 2, 1);
 		slot.addNext(nextblock, 1, 1);
@@ -249,7 +249,7 @@ void handleArrow(int key,int x,int y) {
 	}
 	if (key == GLUT_KEY_DOWN) {
 		if (!board.currentColumn.empty()) {
-			if (!board.movedown()) { 
+			if (!board.movedown()) {
 				createBlock(choose);
 			}
 
@@ -312,7 +312,7 @@ void mouseMove(int x, int y) {
 
 		// camera's direction is set to angle + deltaAngle
 		lx = -sin(angle + deltaAngle);
-		ly = cos(angle + deltaAngle);
+		lz = cos(angle + deltaAngle);
 	}
 }
 GLuint loadTexture(Image* image) {
@@ -427,16 +427,16 @@ void drawScene() {
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/watertexture.bmp");
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/crate.bmp");
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/brick.bmp");
-	setUptexture("texture/brick.bmp");
+//	setUptexture("texture/brick.bmp");
 
     gluLookAt(
-			x,      1,      y,
-			x + lx, 1, y+ly,
-			0.0,    1.0,    0);
+			x+dx,      1+dy,      z,      //eye point
+			x + lx, 1,   z+lz,      //center  -- reference point
+			0.0,    1.0,    0);     //up vector
 
 	DrawBorder();
 	DrawNext();
-	int k = 0,ish=0;
+	int k = 0;
 	for (int i = 0; i < 20; i++) {
 		for (int j = 0; j < 10; j++) {
 			if (board.board[i][j] || board.boardCurrent[i][j]) {
@@ -454,8 +454,8 @@ void drawScene() {
 				glPushMatrix();
 				Block b = Block(shadow);
 				glTranslatef(j * 2 - 5, -i * 2 + 17, 0);    //calculate location
-//				b.drawCube('c');
-				glColor3f(b.color[0], b.color[1], b.color[2]);
+				b.drawCube('c');
+//				glColor3f(b.color[0], b.color[1], b.color[2]);
 				model.Draw();
 				glPopMatrix();
 			}
@@ -465,12 +465,9 @@ void drawScene() {
 	glutSwapBuffers();
 }
 void updatecam(void) {
-//     genType(){
-//
-//     }
 	if (deltaMove) { // update camera position
 		x += deltaMove * lx * 0.01;
-		y += deltaMove * ly * 0.01;
+		z += deltaMove * lz * 0.01;
 	}
 	glutPostRedisplay(); // redisplay everything
 }
@@ -478,7 +475,7 @@ void update(int value) {
 	if (!board.currentColumn.empty()) {
         speed=(space)?10:1000;
 		if (!board.movedown()) {
-            space=false;          
+            space=false;
             createBlock(choose);
 		}
 
@@ -507,12 +504,9 @@ int main(int argc, char** argv) {
 	glutMouseFunc(mouseButton);
 	glutMotionFunc(mouseMove);
 
-//	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
-	model.Load("model/cube-m.obj");
-<<<<<<< HEAD
+	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
+//	model.Load("model/cube-m.obj");
 //	model.Load("model/cube.obj");
-=======
->>>>>>> origin/KM
 //	t_model.Load("D:/_fang/year 3/cg/demotetris/model/t-tetris-m.obj");
 //	l_model.Load("D:/_fang/year 3/cg/demotetris/model/l-tetris-m.obj");
 //	t_model.Load("model/t-tetris-m.obj");
