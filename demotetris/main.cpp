@@ -38,7 +38,7 @@ int choose;
 int current=0;
 int prevChoose;
 int random;
-int prevType,nextType,keepCurrent,keep=-1;
+int prevType,nextType,keepCurrent,keep=0;
 bool pressedS = false,start=false,pause=false,gameover=false,pressedX=false;
 vector<int> typeBlock = { 0,1,2,3,4,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
@@ -299,8 +299,8 @@ void handleArrow(int key,int x,int y) {
 		if (!board.currentColumn.empty()) {
 			if (!board.movedown()) {
 				createBlock(choose);
+				keep = 0;
 			}
-
 			board.update();
 			glutPostRedisplay();
 		}
@@ -338,7 +338,7 @@ void handleKeypress(unsigned char key,int x,int y) {
         }
 	}*/
 	if (key == 'k') {
-		if (!board.currentColumn.empty()) {
+		if (!board.currentColumn.empty()&&keep==0) {
 			board.removeCurrent();
 			if (slot.isShiftEmpty()) {
 				keepCurrent = prevChoose;
@@ -762,6 +762,8 @@ void updateframe(int value) {
 			board.digit2 = 0;
 			board.combo = 1;
 			board.score = 0;
+			keep = 0;
+			current=0;
 			gameover = false;
         }
     }
@@ -776,6 +778,7 @@ void update(int value) {
             space=false;
             createBlock(choose);
 			board.update();
+			keep = 0;
 		}
 
 
