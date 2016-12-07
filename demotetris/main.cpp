@@ -23,10 +23,19 @@
 #include "board.h"
 #include "slot.h"
 
-using namespace std;
+#define BOARD_X 5
+#define BOARD_Y 17
+#define HOME_X 5
+#define HOME_Y 77
+#define NEXT_X 18
+#define NEXT_Y 17
 
+<<<<<<< HEAD
 #define TO_RAD 3.1415926535897932384626433832795/180.0
 #define BLOCK_NUMBER 1000
+=======
+using namespace std;
+>>>>>>> refs/remotes/origin/GZ
 
 Board board;
 Slot slot;
@@ -34,34 +43,40 @@ int choose;
 int current=0;
 int prevChoose;
 int random;
+<<<<<<< HEAD
 int prevType,nextType,keepCurrent,keep=-1;
 bool pressedS = false;
+=======
+int prevType,nextType,keep=0,keepCurrent;
+bool pressedS = false,start=false,pause=false;
+>>>>>>> refs/remotes/origin/GZ
 vector<int> typeBlock = { 0,1,2,3,4,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
-vector<Block> _blocks;
-Model_OBJ model;
-int _axis;
-float _angle[3];
-GLfloat mat[16];
+Model_OBJ model,number[10],wire;
 GLuint _textureId;
 GLfloat red[] = { 1,0,0 };
 GLfloat green[] = { 0,1,0 };
 GLfloat blue[] = { 0,0,1 };
 GLfloat yellow[] = { 0.3,0.3,0 };
-GLfloat pink[] = { 0.5,0,0.5 };
-GLfloat purple[] = { 1,0,1 };
+GLfloat pink[] = { 1,0,1 };
+GLfloat purple[] = { 0.5,0,0.5 };
 GLfloat brown[] = { 0,1,1 };
+<<<<<<< HEAD
 GLfloat gray[] = { 0.2,0.2,0.2 };
+=======
+GLfloat gray[] = { 0.7,0.7,0.7 };
+>>>>>>> refs/remotes/origin/GZ
 GLfloat white[] = { 1,1,1 };
-GLfloat shadow[] = { 0.7,0.7,0.7 };
+GLfloat shadow[] = { 0.4,0.4,0.4 };
 map<int,GLfloat*> col;
+map<char,Model_OBJ> alphabet;
 int speed=1000; bool space=false;
 // Camera position
-float x = 0.0, y = -5.0; // initially 5 units south of origin
+float x = 0.0, z = -5.0,dx,dy=-60,dz; // initially 5 units south of origin
 float deltaMove = 0.0; // initially camera doesn't move
 
 // Camera direction
-float lx = 0.0, ly = 1.0; // camera points initially along y-axis
+float lx = 0.0, lz = 1.0; // camera points initially along y-axis
 float angle = 0.0; // angle of rotation for the camera direction
 float deltaAngle = 0.0; // additional angle change when dragging
 
@@ -132,6 +147,7 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 2, 3,0);
 		board.addblocks(block, 1, 1,0);
 		//-----------------------------------
+<<<<<<< HEAD
 	}
 	else if (oldChoose == 2) {				// --
 		board.addblocks(block, 1, 1,0);	// --
@@ -156,6 +172,54 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 2, 2,0);
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 1, 3,0);
+=======
+
+		board.currentPointRow = 0;
+		board.currentPointColumn = 0;
+	}
+	else if (oldChoose == 2) {				// --
+		board.addblocks(block, 1, 1);	// --
+		board.addblocks(block, 1, 2);
+		board.addblocks(block, 2, 1);
+		board.addblocks(block, 2, 2);
+		//-----------------------------------------
+
+		board.currentPointRow = 0;
+		board.currentPointColumn = 0;
+	}
+	else if (oldChoose == 3) {				//  -
+		board.addblocks(block, 1, 1);	// ---
+		board.addblocks(block, 1, 2);
+		board.addblocks(block, 1, 3);
+		board.addblocks(block, 2, 2);
+		//-----------------------------------------
+
+
+		board.currentPointRow = 0;
+		board.currentPointColumn = 0;
+	}
+	else if (oldChoose == 4) {				//  --
+		board.addblocks(block, 2, 2);	//--
+		board.addblocks(block, 2, 3);
+		board.addblocks(block, 1, 1);
+		board.addblocks(block, 1, 2);
+		//------------------------------------
+
+
+		board.currentPointRow = 0;
+		board.currentPointColumn = 0;
+	}
+	else if (oldChoose == 5) {				//--
+		board.addblocks(block, 2, 1);	//  --
+		board.addblocks(block, 2, 2);
+		board.addblocks(block, 1, 2);
+		board.addblocks(block, 1, 3);
+		//--------------------------------------
+
+
+		board.currentPointRow = 0;
+		board.currentPointColumn = 0;
+>>>>>>> refs/remotes/origin/GZ
 	}
 	else if(oldChoose == 6){
 		board.addblocks(block, 2, 2,0);	//  -
@@ -171,7 +235,7 @@ void createBlock(int oldChoose) {
 	}
 
 	if (choose == 0) { // ---
-		
+
 		slot.addNext(nextblock, 1, 0);
 		slot.addNext(nextblock, 1, 1);
 		slot.addNext(nextblock, 1, 2);
@@ -180,23 +244,23 @@ void createBlock(int oldChoose) {
 
 	}
 	else if (choose == 1) {				// -
-		
+
 		slot.addNext(nextblock, 2, 0);
 		slot.addNext(nextblock, 2, 1);
 		slot.addNext(nextblock, 2, 2);
 		slot.addNext(nextblock, 1, 0);
-		
+
 	}
 	else if (choose == 2) {				// --
-		
+
 		slot.addNext(nextblock, 1, 1);
 		slot.addNext(nextblock, 1, 2);
 		slot.addNext(nextblock, 2, 1);
 		slot.addNext(nextblock, 2, 2);
-		
+
 	}
 	else if (choose == 3) {				//  -
-		
+
 		slot.addNext(nextblock, 1, 0);	// ---
 		slot.addNext(nextblock, 1, 1);
 		slot.addNext(nextblock, 1, 2);
@@ -204,7 +268,7 @@ void createBlock(int oldChoose) {
 
 	}
 	else if (choose == 4) {				//  --
-		
+
 		slot.addNext(nextblock, 2, 1);	//--
 		slot.addNext(nextblock, 2, 2);
 		slot.addNext(nextblock, 1, 0);
@@ -212,7 +276,7 @@ void createBlock(int oldChoose) {
 
 	}
 	else if (choose == 5) {				//--
-		
+
 		slot.addNext(nextblock, 2, 0);	//  --
 		slot.addNext(nextblock, 2, 1);
 		slot.addNext(nextblock, 1, 1);
@@ -235,15 +299,15 @@ void createBlock(int oldChoose) {
 	glutPostRedisplay();
 }
 void handleArrow(int key,int x,int y) {
-	if (key == GLUT_KEY_LEFT) {
+	if (!pause && key == GLUT_KEY_LEFT) {
 		if (!board.currentColumn.empty()) {
 			board.moveblock(-1,0);
 			glutPostRedisplay();
 		}
 	}
-	if (key == GLUT_KEY_DOWN) {
+	if (!pause && key == GLUT_KEY_DOWN) {
 		if (!board.currentColumn.empty()) {
-			if (!board.movedown()) { 
+			if (!board.movedown()) {
 				createBlock(choose);
 			}
 
@@ -251,13 +315,13 @@ void handleArrow(int key,int x,int y) {
 			glutPostRedisplay();
 		}
 	}
-	if (key == GLUT_KEY_RIGHT) {
+	if (!pause && key == GLUT_KEY_RIGHT) {
 		if (!board.currentColumn.empty()) {
 			board.moveblock(1,0);
 			glutPostRedisplay();
 		}
 	}
-	if (key == GLUT_KEY_UP) {
+	if (!pause && key == GLUT_KEY_UP) {
 		if (!board.currentColumn.empty()) {
 			board.rotateBlock();
 			glutPostRedisplay();
@@ -265,15 +329,15 @@ void handleArrow(int key,int x,int y) {
 	}
 }
 void releaseSpecialKey(unsigned char key, int x, int y){
-	if (key == '.') deltaMove = 0.0;
-	if (key == '\/') deltaMove = 0.0;
+	if (key == '=') deltaMove = 0.0;
+	if (key == '-') deltaMove = 0.0;
 }
 void handleKeypress(unsigned char key,int x,int y) {
     if (key == 27) exit(0);
     if (key == 32) space=true;
-//    if (key == '.') deltaMove = 1.0;
-//	if (key == '\/') deltaMove = -1.0;
-	if (key == 's') {
+//    if (key == '-') deltaMove = 1.0;
+//	if (key == '=') deltaMove = -1.0;
+	/*if (key == 's') {
         if(!pressedS){
             pressedS = true;
 			randomBlock();
@@ -283,6 +347,7 @@ void handleKeypress(unsigned char key,int x,int y) {
             glutPostRedisplay();
         }
 	}
+<<<<<<< HEAD
 	if (key == 'k') {
 		if (!board.currentColumn.empty()) {
 			board.removeCurrent();
@@ -319,6 +384,17 @@ void handleKeypress(unsigned char key,int x,int y) {
 			board.moveblock(0, -1);
 			glutPostRedisplay();
 		}
+=======
+	*/
+	if (key == '\/') {
+		keep = 1;
+>>>>>>> refs/remotes/origin/GZ
+	}
+	if (key == 's') {
+        if(!start) start = true;
+	}
+	if (key == 'p') {
+        pause = !pause;
 	}
 }
 void mouseButton(int button, int state, int x, int y) {
@@ -340,7 +416,7 @@ void mouseMove(int x, int y) {
 
 		// camera's direction is set to angle + deltaAngle
 		lx = -sin(angle + deltaAngle);
-		ly = cos(angle + deltaAngle);
+		lz = cos(angle + deltaAngle);
 	}
 }
 GLuint loadTexture(Image* image) {
@@ -375,17 +451,28 @@ void DrawNext() {
 		if (slot.nextblock[i][j]) {
 			glPushMatrix();
 			Block b = slot.nextblocks[i][j];
-			glTranslatef(j * 2 + 17, -i * 2 + 17, 0);    //calculate location
+			glTranslatef(j * 2 + NEXT_X, -i * 2 + NEXT_Y, 0);    //calculate location
 			glColor3f(b.color[0], b.color[1], b.color[2]);
 			model.Draw();
 			glPopMatrix();
 		}
 	}
+	for(int i=0; i<4; i++) {
+        glPushMatrix();
+        glColor3fv(white);
+        glTranslatef(i*2+NEXT_X,NEXT_Y-10,0);
+        if(i==0) alphabet['n'].Draw();
+        else if(i==1) alphabet['e'].Draw();
+        else if(i==2) alphabet['x'].Draw();
+        else if(i==3) alphabet['t'].Draw();
+        glPopMatrix();
+	}
 }
-void DrawBorder() {
+void DrawBorder(GLfloat *color,char *type) {
     glBegin(GL_LINES);
     glEnd();
         //x*2-5,-y*2+17,0
+<<<<<<< HEAD
         glBegin(GL_QUADS);
 //        glColor3f(1,1,1);
 //        glVertex3f(-6,18,-1);
@@ -418,7 +505,141 @@ void DrawBorder() {
 				glEnd();
                 glPopMatrix();
             
+=======
+    /*glBegin(GL_QUADS);
+
+    glColor3f(1,1,1);
+    glVertex3f(-6,18,-1);
+    glVertex3f(14,18,-1);
+    glVertex3f(14,-22,-1);
+    glVertex3f(-6,-22,-1);
+    glEnd();
+    */
+
+    int borderx,bordery,lower_frame;
+    Model_OBJ m;
+    if(type=="game") { borderx=BOARD_X; bordery=BOARD_Y; m=model; lower_frame=-bordery-6; }
+    else if(type=="home") { borderx=HOME_X; bordery=HOME_Y+1; m=wire; lower_frame=-BOARD_Y-6+60+1; }
+    //block border
+    for(int i=0; i<=21; i++) for(int j=0; j<=11; j++) {
+        if(i==0||i==21||j==0||j==11) {
+            glPushMatrix();
+            Block b = Block(color);
+            if(i==0) glTranslatef(j*2-borderx-2,bordery+2,0);
+            else if(i==21) glTranslatef(j*2-borderx-2,lower_frame,0);
+            else if(j==0) glTranslatef(-borderx-2,-i*2+bordery+2,0);
+            else if(j==11) glTranslatef(borderx+10,-i*2+bordery+2,0);
+            glColor3f(b.color[0],b.color[1],b.color[2]);
+//            b.drawCube('t');
+            model.Draw();
+            glPopMatrix();
         }
+    }
+}
+void DrawGameBoard() {
+    DrawBorder(white,"game");
+	DrawNext();
+    int k = 0;
+	for (int i = 0; i < 20; i++) {
+		for (int j = 0; j < 10; j++) {
+			if (board.board[i][j] || board.boardCurrent[i][j]) {
+//				cout << k<< " " <<i << " " << j << endl;
+				k++;
+				glPushMatrix();
+				Block b = board.blocks[i][j];
+				glTranslatef(j*2-BOARD_X,-i*2+BOARD_Y,0);    //calculate location
+//				b.drawCube('c');
+                glColor3f(b.color[0],b.color[1],b.color[2]);
+                model.Draw();
+				glPopMatrix();
+            }
+            else if (board.boardShadow[i][j]) {
+				glPushMatrix();
+				Block b = Block(shadow);
+				glTranslatef(j*2-BOARD_X,-i*2+BOARD_Y, 0);    //calculate location
+				b.drawCube('c');
+//				glColor3f(b.color[0], b.color[1], b.color[2]);
+				model.Draw();
+				glPopMatrix();
+			}
+			else if (pause) {
+                glPushMatrix();
+				glColor3fv(white);
+				glTranslatef(j*2-BOARD_X,-i*2+BOARD_Y, 0);    //calculate location
+				glPushMatrix();
+                glScalef(1.7,1.7,1.7);
+                if (i==8&&j==3) alphabet['p'].Draw();
+                else if (i==8&&j==4) alphabet['a'].Draw();
+                else if (i==8&&j==5) alphabet['u'].Draw();
+                else if (i==8&&j==6) alphabet['s'].Draw();
+                else if (i==8&&j==7) alphabet['e'].Draw();
+                glPopMatrix();
+				glPopMatrix();
+			}
+		}
+	}
+}
+void DrawHome() {
+    DrawBorder(white,"home");
+    for(int i=0; i<20; i++) {
+        for(int j=0; j<10; j++) {
+            glPushMatrix();
+            glTranslatef(j*2-HOME_X,-i*2+HOME_Y+1,0);
+            glColor3fv(purple);
+            //uncomment if want purple cube background
+//            model.Draw();
+            glPopMatrix();
+        //----------------------------------------------------
+            glPushMatrix();
+            glTranslatef(j*2-HOME_X,-i*2+HOME_Y+1,0+1);
+            glColor3fv(white);
+            //----------------------------------------------------
+            glPushMatrix();
+            glScalef(1.5,1.5,1.5);
+            if (i==3&&j==2) alphabet['t'].Draw();
+            else if (i==3&&j==3) alphabet['e'].Draw();
+            else if (i==3&&j==4) alphabet['t'].Draw();
+            else if (i==3&&j==5) alphabet['r'].Draw();
+            else if (i==3&&j==6) alphabet['i'].Draw();
+            else if (i==3&&j==7) alphabet['s'].Draw();
+            glPopMatrix();
+            //----------------------------------------------------
+            if (i==14&&j==2) alphabet['s'].Draw();
+            else if (i==14&&j==3) alphabet['t'].Draw();
+            else if (i==14&&j==4) alphabet['a'].Draw();
+            else if (i==14&&j==5) alphabet['r'].Draw();
+            else if (i==14&&j==6) alphabet['t'].Draw();
+            else if (i==15&&j==7) alphabet['s'].Draw();
+            //----------------------------------------------------
+            glPushMatrix();
+            glScalef(0.5,0.5,0.5);
+            if (i==15&&j==2) alphabet['p'].Draw();
+            else if (i==15&&j==3) alphabet['r'].Draw();
+            else if (i==15&&j==4) alphabet['e'].Draw();
+            else if (i==15&&j==5) alphabet['s'].Draw();
+            else if (i==15&&j==6) alphabet['s'].Draw();
+            glPopMatrix();
+            //----------------------------------------------------
+            glColor3fv(red);
+            if (i==7&&j==1) model.Draw();
+            else if (i==8&&j==1) model.Draw();
+            else if (i==9&&j==1) model.Draw();
+            else if (i==10&&j==1) model.Draw();
+            glColor3fv(green);
+            if (i==8&&j==4) model.Draw();
+            else if (i==9&&j==3) model.Draw();
+            else if (i==9&&j==4) model.Draw();
+            else if (i==9&&j==5) model.Draw();
+            glColor3fv(blue);
+            if (i==8&&j==7) model.Draw();
+            else if (i==8&&j==8) model.Draw();
+            else if (i==9&&j==7) model.Draw();
+            else if (i==9&&j==8) model.Draw();
+            glPopMatrix();
+        //----------------------------------------------------
+>>>>>>> refs/remotes/origin/GZ
+        }
+    }
 }
 void handleResize(int w, int h) {
     	//Tell OpenGL how to convert from coordinates to pixel values
@@ -462,13 +683,12 @@ void drawScene() {
 	glLoadIdentity();
 
 	setUplighting();
-	glTranslatef(0,0,-68);
-//	setUptexture("D:/_fang/year 3/cg/demotetris/texture/watertexture.bmp");
-//	setUptexture("D:/_fang/year 3/cg/demotetris/texture/crate.bmp");
+	glTranslatef(0+dx,0+dy,dz-68);
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/brick.bmp");
-	setUptexture("texture/brick.bmp");
+//	setUptexture("texture/brick.bmp");
 
     gluLookAt(
+<<<<<<< HEAD
 			x,      1,      y,
 			x + lx, 1, y+ly,
 			0.0,    1.0,    0);
@@ -508,24 +728,43 @@ void drawScene() {
 			}
 		}
 	}
+=======
+			x,      1,      z,               //camera location @ (x,1,z)
+			x - lx, 1, z - lz,               // looking along vector (lx,1,lz)
+			0,      1,      0);              // with up vector (0,1,0)
+>>>>>>> refs/remotes/origin/GZ
 
+	DrawGameBoard();
+	DrawHome();
 	glutSwapBuffers();
 }
 void updatecam(void) {
-//     genType(){
-//
-//     }
 	if (deltaMove) { // update camera position
 		x += deltaMove * lx * 0.01;
-		y += deltaMove * ly * 0.01;
+		z += deltaMove * lz * 0.01;
 	}
 	glutPostRedisplay(); // redisplay everything
 }
+void updateframe(int value) {
+    if (start) {
+        dy+=0.5;
+        if(dy>=0) {
+            start=false;
+            pressedS = true;
+			randomBlock();
+			nextblock = Block(col[choose]);
+            createBlock(choose);
+            glutPostRedisplay();
+        }
+    }
+    glutPostRedisplay();
+    glutTimerFunc(10, updateframe, 0);
+}
 void update(int value) {
-	if (!board.currentColumn.empty()) {
+	if (!pause&&!board.currentColumn.empty()) {
         speed=(space)?10:1000;
 		if (!board.movedown()) {
-            space=false;          
+            space=false;
             createBlock(choose);
 		}
 
@@ -554,14 +793,35 @@ int main(int argc, char** argv) {
 	glutMouseFunc(mouseButton);
 	glutMotionFunc(mouseMove);
 
-//	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
-	model.Load("model/cube-m.obj");
-//	t_model.Load("D:/_fang/year 3/cg/demotetris/model/t-tetris-m.obj");
-//	l_model.Load("D:/_fang/year 3/cg/demotetris/model/l-tetris-m.obj");
-//	t_model.Load("model/t-tetris-m.obj");
-//	l_model.Load("model/l-tetris-m.obj");
+	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
+
+    number[0].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/0-triang-m.obj");
+    number[1].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/1-triang-m.obj");
+    number[2].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/2-triang-m.obj");
+    number[3].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/3-triang-m.obj");
+    number[4].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/4-triang-m.obj");
+    number[5].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/5-triang-m.obj");
+    number[6].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/6-triang-m.obj");
+    number[7].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/7-triang-m.obj");
+    number[8].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/8-triang-m.obj");
+    number[9].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/9-triang-m.obj");
+
+    alphabet['a'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/a-triang-m.obj");
+    alphabet['c'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/c-triang-m.obj");
+    alphabet['e'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/e-triang-m.obj");
+    alphabet['i'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/i-triang-m.obj");
+    alphabet['k'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/k-triang-m.obj");
+    alphabet['n'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/n-triang-m.obj");
+    alphabet['o'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/o-triang-m.obj");
+    alphabet['p'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/p-triang-m.obj");
+    alphabet['r'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/r-triang-m.obj");
+    alphabet['s'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/s-triang-m.obj");
+    alphabet['t'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/t-triang-m.obj");
+    alphabet['u'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/u-triang-m.obj");
+    alphabet['x'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/x-triang-m.obj");
 
 	glutTimerFunc(speed, update, 0);
+	glutTimerFunc(10, updateframe, 0);
 
 	glutMainLoop();
 	return 0;
