@@ -121,71 +121,63 @@ void createBlock(int oldChoose) {
 	cout << "choose = " << choose << endl;
 	//----------------------------------------------------------------------
 	if (oldChoose == 0) { // ---
-        if(board.board[1][0][board.randDepth]||board.board[1][1][board.randDepth]||
-           board.board[1][2][board.randDepth]||board.board[1][3][board.randDepth]) gameover=true;
 		board.addblocks(block, 1, 0 ,0);
 		board.addblocks(block, 1, 1 ,0);
 		board.addblocks(block, 1, 2 ,0);
 		board.addblocks(block, 1, 3 ,0);
+		
 		//-----------------------------------
 	}
 	else if (oldChoose == 1) {				// -
-	    if(board.board[2][1][board.randDepth]||board.board[2][2][board.randDepth]||
-           board.board[2][3][board.randDepth]||board.board[1][1][board.randDepth]) gameover=true;
 		board.addblocks(block, 2, 1,0);	// ---
 		board.addblocks(block, 2, 2,0);
 		board.addblocks(block, 2, 3,0);
 		board.addblocks(block, 1, 1,0);
+		
 		//-----------------------------------
 	}
 	else if (oldChoose == 2) {				// --
-	    if(board.board[1][1][board.randDepth]||board.board[1][2][board.randDepth]||
-            board.board[2][1][board.randDepth]||board.board[2][2][board.randDepth]) gameover=true;
 		board.addblocks(block, 1, 1,0);	// --
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 2, 1,0);
 		board.addblocks(block, 2, 2,0);
+		
 	}
 	else if (oldChoose == 3) {				//  -
-	    if(board.board[1][1][board.randDepth]||board.board[1][2][board.randDepth]||
-            board.board[1][3][board.randDepth]||board.board[2][2][board.randDepth]) gameover=true;
 		board.addblocks(block, 1, 1,0);	// ---
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 1, 3,0);
 		board.addblocks(block, 2, 2,0);
+		
 	}
 	else if (oldChoose == 4) {				//  --
-	    if(board.board[2][2][board.randDepth]||board.board[2][3][board.randDepth]||
-            board.board[1][1][board.randDepth]||board.board[1][2][board.randDepth]) gameover=true;
 		board.addblocks(block, 2, 2,0);	//--
 		board.addblocks(block, 2, 3,0);
 		board.addblocks(block, 1, 1,0);
 		board.addblocks(block, 1, 2,0);
+		
 	}
 	else if (oldChoose == 5) {				//--
-	    if(board.board[2][1][board.randDepth]||board.board[2][2][board.randDepth]||
-            board.board[1][2][board.randDepth]||board.board[1][3][board.randDepth]) gameover=true;
 		board.addblocks(block, 2, 1,0);	//  --
 		board.addblocks(block, 2, 2,0);
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 1, 3,0);
+		
 	}
 	else if(oldChoose == 6){
-	    if(board.board[2][2][board.randDepth]||board.board[2][3][board.randDepth]||
-            board.board[2][4][board.randDepth]||board.board[1][4][board.randDepth]) gameover=true;
 		board.addblocks(block, 2, 2,0);	//  -
 		board.addblocks(block, 2, 3,0);	//---
 		board.addblocks(block, 2, 4,0);
 		board.addblocks(block, 1, 4,0);
 	}
 	else {
-	    if(board.board[1][1][board.randDepth]||board.board[2][1][board.randDepth]||
-            board.board[3][1][board.randDepth]||board.board[4][1][board.randDepth]) gameover=true;
 		board.addblocks(block, 1, 1,0);	//  -
 		board.addblocks(block, 2, 1,0);	//  -
 		board.addblocks(block, 3, 1,0);	//  -
 		board.addblocks(block, 4, 1,0);	//  -
+		
 	}
+	if (!board.canmoveblock(1, 0, 0)) gameover = true;
 
 	if (choose == 0) { // ---
 
@@ -514,10 +506,10 @@ void DrawGameBoard() {
 					model.Draw();
 					glPopMatrix();
 				}
-                else if (pause) {
+                if (pause) {
                     glPushMatrix();
                     glColor3fv(white);
-                    glTranslatef(j*2-BOARD_X,-i*2+BOARD_Y, 0);    //calculate location
+                    glTranslatef(j*2-BOARD_X,-i*2+BOARD_Y, 2);    //calculate location
                     glPushMatrix();
                     glScalef(1.7,1.7,1.7);
                     if (i==8&&j==3) alphabet['p'].Draw();
@@ -531,7 +523,7 @@ void DrawGameBoard() {
                 else if (gameover) {
                     glPushMatrix();
                     glColor3fv(white);
-                    glTranslatef(j*2-BOARD_X,-i*2+BOARD_Y, 0);    //calculate location
+                    glTranslatef(j*2-BOARD_X,-i*2+BOARD_Y, 2);    //calculate location
                     //draw score
                     glPushMatrix();
                     glScalef(0.5,0.5,0.5);
@@ -693,6 +685,10 @@ void updateframe(int value) {
             pressedX = false;
             pressedS = true;
             glutPostRedisplay();
+			slot.clearNext();
+			slot.clearShift();
+			board.clean();
+			gameover = false;
         }
     }
     glutPostRedisplay();
