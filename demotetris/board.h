@@ -42,6 +42,7 @@ public:
 	void rotateBlock();
 
 	bool movedown();
+	void removeCurrent();
 	void update();
 };
 

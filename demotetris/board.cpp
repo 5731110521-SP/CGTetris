@@ -215,6 +215,17 @@ void Board::rotateBlock()
 
 }
 
+void Board::removeCurrent() {
+		for (int i = 0; i < 4; i++) {
+			boardCurrent[currentRow[i]][currentColumn[i]] = false;
+			boardShadow[shadowrow[i]][shadowcolumn[i]] = false;
+		}
+		currentRow.clear();
+		currentColumn.clear();
+		shadowrow.clear();
+		shadowcolumn.clear();
+}
+
 bool Board::movedown()
 {
 	if (!canmoveblock(1, 0)) {
