@@ -210,7 +210,7 @@ void createBlock(int oldChoose) {
 		slot.addNext(nextblock, 3, 1);
 		slot.addNext(nextblock, 4, 1);
 	}
-	
+
 	/*
 	if (keepCurrent == 0) { // ---
 
@@ -273,8 +273,8 @@ void createBlock(int oldChoose) {
 	slot.addShift(keepBlock, 3, 1);
 	slot.addShift(keepBlock, 4, 1);
 	}*/
-	
-	
+
+
 	glutPostRedisplay();
 }
 void handleArrow(int key,int x,int y) {
@@ -658,13 +658,12 @@ void setUplighting() {
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
 	glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
 }
-
 void showScore() {
 
 	glScalef(0.7, 0.7, 0.7);
 	Block bb = Block(white);
 	glColor3f(bb.color[0], bb.color[1], bb.color[2]);
-	
+
 	glPushMatrix();
 	glTranslatef(28 , 28, 0);
 	num[board.digit1].Draw();
@@ -695,7 +694,7 @@ void drawScene() {
 	DrawHome();
 	DrawNext();
 
-	if(isStart) showScore();
+	if(!start) showScore();
 
 	glutSwapBuffers();
 }
@@ -706,7 +705,6 @@ void updatecam(void) {
 	}
 	glutPostRedisplay(); // redisplay everything
 }
-
 void updateframe(int value) {
     if (start) {
         dy+=0.5;
@@ -722,7 +720,6 @@ void updateframe(int value) {
     glutPostRedisplay();
     glutTimerFunc(10, updateframe, 0);
 }
-
 void update(int value) {
 	if (!pause&&!board.currentColumn.empty()) {
         speed=(space)?10:1000;
@@ -756,10 +753,10 @@ int main(int argc, char** argv) {
 	glutMouseFunc(mouseButton);
 	glutMotionFunc(mouseMove);
 
-//	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
-	model.Load("model/cube-m.obj");
+	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
+//	model.Load("model/cube-m.obj");
 
-	/*
+//	/*
     number[0].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/0-triang-m.obj");
     number[1].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/1-triang-m.obj");
     number[2].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/2-triang-m.obj");
@@ -770,32 +767,32 @@ int main(int argc, char** argv) {
     number[7].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/7-triang-m.obj");
     number[8].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/8-triang-m.obj");
     number[9].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/9-triang-m.obj");
-	*/
-	number[0].Load("model/character_obj/0-triang-m.obj");
-	number[1].Load("model/character_obj/1-triang-m.obj");
-	number[2].Load("model/character_obj/2-triang-m.obj");
-	number[3].Load("model/character_obj/3-triang-m.obj");
-	number[4].Load("model/character_obj/4-triang-m.obj");
-	number[5].Load("model/character_obj/5-triang-m.obj");
-	number[6].Load("model/character_obj/6-triang-m.obj");
-	number[7].Load("model/character_obj/7-triang-m.obj");
-	number[8].Load("model/character_obj/8-triang-m.obj");
-	number[9].Load("model/character_obj/9-triang-m.obj");
-
-	alphabet['a'].Load("model/character_obj/a-triang-m.obj");
-	alphabet['c'].Load("model/character_obj/c-triang-m.obj");
-	alphabet['e'].Load("model/character_obj/e-triang-m.obj");
-	alphabet['i'].Load("model/character_obj/i-triang-m.obj");
-	alphabet['k'].Load("model/character_obj/k-triang-m.obj");
-	alphabet['n'].Load("model/character_obj/n-triang-m.obj");
-	alphabet['o'].Load("model/character_obj/o-triang-m.obj");
-	alphabet['p'].Load("model/character_obj/p-triang-m.obj");
-	alphabet['r'].Load("model/character_obj/r-triang-m.obj");
-	alphabet['s'].Load("model/character_obj/s-triang-m.obj");
-	alphabet['t'].Load("model/character_obj/t-triang-m.obj");
-	alphabet['u'].Load("model/character_obj/u-triang-m.obj");
-	alphabet['x'].Load("model/character_obj/x-triang-m.obj");
-	/*
+//	*/
+//	number[0].Load("model/character_obj/0-triang-m.obj");
+//	number[1].Load("model/character_obj/1-triang-m.obj");
+//	number[2].Load("model/character_obj/2-triang-m.obj");
+//	number[3].Load("model/character_obj/3-triang-m.obj");
+//	number[4].Load("model/character_obj/4-triang-m.obj");
+//	number[5].Load("model/character_obj/5-triang-m.obj");
+//	number[6].Load("model/character_obj/6-triang-m.obj");
+//	number[7].Load("model/character_obj/7-triang-m.obj");
+//	number[8].Load("model/character_obj/8-triang-m.obj");
+//	number[9].Load("model/character_obj/9-triang-m.obj");
+//
+//	alphabet['a'].Load("model/character_obj/a-triang-m.obj");
+//	alphabet['c'].Load("model/character_obj/c-triang-m.obj");
+//	alphabet['e'].Load("model/character_obj/e-triang-m.obj");
+//	alphabet['i'].Load("model/character_obj/i-triang-m.obj");
+//	alphabet['k'].Load("model/character_obj/k-triang-m.obj");
+//	alphabet['n'].Load("model/character_obj/n-triang-m.obj");
+//	alphabet['o'].Load("model/character_obj/o-triang-m.obj");
+//	alphabet['p'].Load("model/character_obj/p-triang-m.obj");
+//	alphabet['r'].Load("model/character_obj/r-triang-m.obj");
+//	alphabet['s'].Load("model/character_obj/s-triang-m.obj");
+//	alphabet['t'].Load("model/character_obj/t-triang-m.obj");
+//	alphabet['u'].Load("model/character_obj/u-triang-m.obj");
+//	alphabet['x'].Load("model/character_obj/x-triang-m.obj");
+//	/*
 	alphabet['a'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/a-triang-m.obj");
 	alphabet['c'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/c-triang-m.obj");
 	alphabet['e'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/e-triang-m.obj");
@@ -809,18 +806,18 @@ int main(int argc, char** argv) {
 	alphabet['t'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/t-triang-m.obj");
 	alphabet['u'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/u-triang-m.obj");
 	alphabet['x'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/x-triang-m.obj");
-	*/
+//	*/
 
-	num[0].Load("model/0.obj");
-	num[1].Load("model/1.obj");
-	num[2].Load("model/2.obj");
-	num[3].Load("model/3.obj");
-	num[4].Load("model/4.obj");
-	num[5].Load("model/5.obj");
-	num[6].Load("model/6.obj");
-	num[7].Load("model/7.obj");
-	num[8].Load("model/8.obj");
-	num[9].Load("model/9.obj");
+//	num[0].Load("model/0.obj");
+//	num[1].Load("model/1.obj");
+//	num[2].Load("model/2.obj");
+//	num[3].Load("model/3.obj");
+//	num[4].Load("model/4.obj");
+//	num[5].Load("model/5.obj");
+//	num[6].Load("model/6.obj");
+//	num[7].Load("model/7.obj");
+//	num[8].Load("model/8.obj");
+//	num[9].Load("model/9.obj");
 
 	glutTimerFunc(speed, update, 0);
 	glutTimerFunc(10, updateframe, 0);
