@@ -30,12 +30,7 @@
 #define NEXT_X 18
 #define NEXT_Y 17
 
-<<<<<<< HEAD
-#define TO_RAD 3.1415926535897932384626433832795/180.0
-#define BLOCK_NUMBER 1000
-=======
 using namespace std;
->>>>>>> refs/remotes/origin/GZ
 
 Board board;
 Slot slot;
@@ -43,13 +38,8 @@ int choose;
 int current=0;
 int prevChoose;
 int random;
-<<<<<<< HEAD
 int prevType,nextType,keepCurrent,keep=-1;
-bool pressedS = false;
-=======
-int prevType,nextType,keep=0,keepCurrent;
 bool pressedS = false,start=false,pause=false;
->>>>>>> refs/remotes/origin/GZ
 vector<int> typeBlock = { 0,1,2,3,4,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
 Model_OBJ model,number[10],wire;
@@ -61,11 +51,7 @@ GLfloat yellow[] = { 0.3,0.3,0 };
 GLfloat pink[] = { 1,0,1 };
 GLfloat purple[] = { 0.5,0,0.5 };
 GLfloat brown[] = { 0,1,1 };
-<<<<<<< HEAD
-GLfloat gray[] = { 0.2,0.2,0.2 };
-=======
 GLfloat gray[] = { 0.7,0.7,0.7 };
->>>>>>> refs/remotes/origin/GZ
 GLfloat white[] = { 1,1,1 };
 GLfloat shadow[] = { 0.4,0.4,0.4 };
 map<int,GLfloat*> col;
@@ -147,7 +133,6 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 2, 3,0);
 		board.addblocks(block, 1, 1,0);
 		//-----------------------------------
-<<<<<<< HEAD
 	}
 	else if (oldChoose == 2) {				// --
 		board.addblocks(block, 1, 1,0);	// --
@@ -172,54 +157,6 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 2, 2,0);
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 1, 3,0);
-=======
-
-		board.currentPointRow = 0;
-		board.currentPointColumn = 0;
-	}
-	else if (oldChoose == 2) {				// --
-		board.addblocks(block, 1, 1);	// --
-		board.addblocks(block, 1, 2);
-		board.addblocks(block, 2, 1);
-		board.addblocks(block, 2, 2);
-		//-----------------------------------------
-
-		board.currentPointRow = 0;
-		board.currentPointColumn = 0;
-	}
-	else if (oldChoose == 3) {				//  -
-		board.addblocks(block, 1, 1);	// ---
-		board.addblocks(block, 1, 2);
-		board.addblocks(block, 1, 3);
-		board.addblocks(block, 2, 2);
-		//-----------------------------------------
-
-
-		board.currentPointRow = 0;
-		board.currentPointColumn = 0;
-	}
-	else if (oldChoose == 4) {				//  --
-		board.addblocks(block, 2, 2);	//--
-		board.addblocks(block, 2, 3);
-		board.addblocks(block, 1, 1);
-		board.addblocks(block, 1, 2);
-		//------------------------------------
-
-
-		board.currentPointRow = 0;
-		board.currentPointColumn = 0;
-	}
-	else if (oldChoose == 5) {				//--
-		board.addblocks(block, 2, 1);	//  --
-		board.addblocks(block, 2, 2);
-		board.addblocks(block, 1, 2);
-		board.addblocks(block, 1, 3);
-		//--------------------------------------
-
-
-		board.currentPointRow = 0;
-		board.currentPointColumn = 0;
->>>>>>> refs/remotes/origin/GZ
 	}
 	else if(oldChoose == 6){
 		board.addblocks(block, 2, 2,0);	//  -
@@ -346,8 +283,7 @@ void handleKeypress(unsigned char key,int x,int y) {
             createBlock(choose);
             glutPostRedisplay();
         }
-	}
-<<<<<<< HEAD
+	}*/
 	if (key == 'k') {
 		if (!board.currentColumn.empty()) {
 			board.removeCurrent();
@@ -384,11 +320,9 @@ void handleKeypress(unsigned char key,int x,int y) {
 			board.moveblock(0, -1);
 			glutPostRedisplay();
 		}
-=======
-	*/
+	}
 	if (key == '\/') {
 		keep = 1;
->>>>>>> refs/remotes/origin/GZ
 	}
 	if (key == 's') {
         if(!start) start = true;
@@ -469,43 +403,33 @@ void DrawNext() {
 	}
 }
 void DrawBorder(GLfloat *color,char *type) {
-    glBegin(GL_LINES);
-    glEnd();
-        //x*2-5,-y*2+17,0
-<<<<<<< HEAD
-        glBegin(GL_QUADS);
-//        glColor3f(1,1,1);
-//        glVertex3f(-6,18,-1);
-//        glVertex3f(14,18,-1);
-//        glVertex3f(14,-22,-1);
-//        glVertex3f(-6,-22,-1);
-        glEnd();
 
-        for(int i=0; i<=ROW; i++)for (int j = 0; j <= COLUMN; j++)for (int k = 0; k <= DEPTH; k++) {
-            
-                glPushMatrix();
-                //Block b = Block(white);
-                //if(i==0) glTranslatef(j*2-7,19,0);
-                //else if(i==21) glTranslatef(j*2-7,-23,0);
-               // else if(j==0) glTranslatef(-7,-i*2+19,0);
-               // else if(j==11) glTranslatef(15,-i*2+19,0);
+	for (int i = 0; i <= ROW; i++)
+		for (int j = 0; j <= COLUMN; j++)
+			for (int k = 0; k <= DEPTH; k++) {
+
+		glPushMatrix();
+		//Block b = Block(white);
+		//if(i==0) glTranslatef(j*2-7,19,0);
+		//else if(i==21) glTranslatef(j*2-7,-23,0);
+	   // else if(j==0) glTranslatef(-7,-i*2+19,0);
+	   // else if(j==11) glTranslatef(15,-i*2+19,0);
 //                b.drawCube('t');
-                //glColor3f(b.color[0],b.color[1],b.color[2]);
-                //model.Draw();
+				//glColor3f(b.color[0],b.color[1],b.color[2]);
+				//model.Draw();
 
-				glLineWidth(0.5);
-				glColor3f(gray[0], gray[1], gray[2]);
-				glBegin(GL_LINES);
-				glVertex3f(-7+1, 19-1-i*2, -k*2+1);
-				glVertex3f(-7+1 + COLUMN * 2, 19-1-i*2, -k*2+1);
-				glVertex3f(-7+1 + j * 2, 19-1, -k * 2+1);
-				glVertex3f(-7+1 + j * 2, 19-1 - ROW * 2, -k * 2+1);
-				glVertex3f(-7+1 + j * 2, 19-1-i*2, 1);
-				glVertex3f(-7+1 + j * 2, 19-1 - i * 2, -DEPTH * 2+1);
-				glEnd();
-                glPopMatrix();
-            
-=======
+		glLineWidth(0.5);
+		glColor3f(gray[0], gray[1], gray[2]);
+		glBegin(GL_LINES);
+		glVertex3f(-7 + 1, 19 - 1 - i * 2, -k * 2 + 1);
+		glVertex3f(-7 + 1 + COLUMN * 2, 19 - 1 - i * 2, -k * 2 + 1);
+		glVertex3f(-7 + 1 + j * 2, 19 - 1, -k * 2 + 1);
+		glVertex3f(-7 + 1 + j * 2, 19 - 1 - ROW * 2, -k * 2 + 1);
+		glVertex3f(-7 + 1 + j * 2, 19 - 1 - i * 2, 1);
+		glVertex3f(-7 + 1 + j * 2, 19 - 1 - i * 2, -DEPTH * 2 + 1);
+		glEnd();
+		glPopMatrix();
+	}
     /*glBegin(GL_QUADS);
 
     glColor3f(1,1,1);
@@ -521,32 +445,36 @@ void DrawBorder(GLfloat *color,char *type) {
     if(type=="game") { borderx=BOARD_X; bordery=BOARD_Y; m=model; lower_frame=-bordery-6; }
     else if(type=="home") { borderx=HOME_X; bordery=HOME_Y+1; m=wire; lower_frame=-BOARD_Y-6+60+1; }
     //block border
-    for(int i=0; i<=21; i++) for(int j=0; j<=11; j++) {
-        if(i==0||i==21||j==0||j==11) {
-            glPushMatrix();
-            Block b = Block(color);
-            if(i==0) glTranslatef(j*2-borderx-2,bordery+2,0);
-            else if(i==21) glTranslatef(j*2-borderx-2,lower_frame,0);
-            else if(j==0) glTranslatef(-borderx-2,-i*2+bordery+2,0);
-            else if(j==11) glTranslatef(borderx+10,-i*2+bordery+2,0);
-            glColor3f(b.color[0],b.color[1],b.color[2]);
-//            b.drawCube('t');
-            model.Draw();
-            glPopMatrix();
-        }
-    }
+	/*if (type == "home") {
+		for (int i = 0; i <= 21; i++) for (int j = 0; j <= 11; j++) {
+			if (i == 0 || i == 21 || j == 0 || j == 11) {
+				glPushMatrix();
+				Block b = Block(color);
+				if (i == 0) glTranslatef(j * 2 - borderx - 2, bordery + 2, 0);
+				else if (i == 21) glTranslatef(j * 2 - borderx - 2, lower_frame, 0);
+				else if (j == 0) glTranslatef(-borderx - 2, -i * 2 + bordery + 2, 0);
+				else if (j == 11) glTranslatef(borderx + 10, -i * 2 + bordery + 2, 0);
+				glColor3f(b.color[0], b.color[1], b.color[2]);
+				//            b.drawCube('t');
+				model.Draw();
+				glPopMatrix();
+			}
+		}
+	}*/
+	
 }
+
 void DrawGameBoard() {
     DrawBorder(white,"game");
 	DrawNext();
     int k = 0;
 	for (int i = 0; i < 20; i++) {
 		for (int j = 0; j < 10; j++) {
-			if (board.board[i][j] || board.boardCurrent[i][j]) {
+			if (board.board[i][j][0] || board.boardCurrent[i][j][0]) {
 //				cout << k<< " " <<i << " " << j << endl;
 				k++;
 				glPushMatrix();
-				Block b = board.blocks[i][j];
+				Block b = board.blocks[i][j][0];
 				glTranslatef(j*2-BOARD_X,-i*2+BOARD_Y,0);    //calculate location
 //				b.drawCube('c');
                 glColor3f(b.color[0],b.color[1],b.color[2]);
@@ -637,7 +565,6 @@ void DrawHome() {
             else if (i==9&&j==8) model.Draw();
             glPopMatrix();
         //----------------------------------------------------
->>>>>>> refs/remotes/origin/GZ
         }
     }
 }
@@ -688,12 +615,12 @@ void drawScene() {
 //	setUptexture("texture/brick.bmp");
 
     gluLookAt(
-<<<<<<< HEAD
-			x,      1,      y,
-			x + lx, 1, y+ly,
-			0.0,    1.0,    0);
+		x, 1, z,               //camera location @ (x,1,z)
+		x - lx, 1, z - lz,               // looking along vector (lx,1,lz)
+		0, 1, 0);              // with up vector (0,1,0)
 
-	DrawBorder();
+	DrawGameBoard();
+	DrawHome();
 	DrawNext();
 	int h=0,ish=0;
 	for (int i = 0; i < ROW; i++) {
@@ -728,14 +655,7 @@ void drawScene() {
 			}
 		}
 	}
-=======
-			x,      1,      z,               //camera location @ (x,1,z)
-			x - lx, 1, z - lz,               // looking along vector (lx,1,lz)
-			0,      1,      0);              // with up vector (0,1,0)
->>>>>>> refs/remotes/origin/GZ
 
-	DrawGameBoard();
-	DrawHome();
 	glutSwapBuffers();
 }
 void updatecam(void) {
@@ -793,8 +713,9 @@ int main(int argc, char** argv) {
 	glutMouseFunc(mouseButton);
 	glutMotionFunc(mouseMove);
 
-	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
-
+	//model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
+	model.Load("model/cube-m.obj");
+	/*
     number[0].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/0-triang-m.obj");
     number[1].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/1-triang-m.obj");
     number[2].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/2-triang-m.obj");
@@ -805,21 +726,46 @@ int main(int argc, char** argv) {
     number[7].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/7-triang-m.obj");
     number[8].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/8-triang-m.obj");
     number[9].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/9-triang-m.obj");
+	*/
+	number[0].Load("model/character_obj/0-triang-m.obj");
+	number[1].Load("model/character_obj/1-triang-m.obj");
+	number[2].Load("model/character_obj/2-triang-m.obj");
+	number[3].Load("model/character_obj/3-triang-m.obj");
+	number[4].Load("model/character_obj/4-triang-m.obj");
+	number[5].Load("model/character_obj/5-triang-m.obj");
+	number[6].Load("model/character_obj/6-triang-m.obj");
+	number[7].Load("model/character_obj/7-triang-m.obj");
+	number[8].Load("model/character_obj/8-triang-m.obj");
+	number[9].Load("model/character_obj/9-triang-m.obj");
 
-    alphabet['a'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/a-triang-m.obj");
-    alphabet['c'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/c-triang-m.obj");
-    alphabet['e'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/e-triang-m.obj");
-    alphabet['i'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/i-triang-m.obj");
-    alphabet['k'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/k-triang-m.obj");
-    alphabet['n'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/n-triang-m.obj");
-    alphabet['o'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/o-triang-m.obj");
-    alphabet['p'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/p-triang-m.obj");
-    alphabet['r'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/r-triang-m.obj");
-    alphabet['s'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/s-triang-m.obj");
-    alphabet['t'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/t-triang-m.obj");
-    alphabet['u'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/u-triang-m.obj");
-    alphabet['x'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/x-triang-m.obj");
-
+	alphabet['a'].Load("model/character_obj/a-triang-m.obj");
+	alphabet['c'].Load("model/character_obj/c-triang-m.obj");
+	alphabet['e'].Load("model/character_obj/e-triang-m.obj");
+	alphabet['i'].Load("model/character_obj/i-triang-m.obj");
+	alphabet['k'].Load("model/character_obj/k-triang-m.obj");
+	alphabet['n'].Load("model/character_obj/n-triang-m.obj");
+	alphabet['o'].Load("model/character_obj/o-triang-m.obj");
+	alphabet['p'].Load("model/character_obj/p-triang-m.obj");
+	alphabet['r'].Load("model/character_obj/r-triang-m.obj");
+	alphabet['s'].Load("model/character_obj/s-triang-m.obj");
+	alphabet['t'].Load("model/character_obj/t-triang-m.obj");
+	alphabet['u'].Load("model/character_obj/u-triang-m.obj");
+	alphabet['x'].Load("model/character_obj/x-triang-m.obj");
+	/*
+	alphabet['a'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/a-triang-m.obj");
+	alphabet['c'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/c-triang-m.obj");
+	alphabet['e'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/e-triang-m.obj");
+	alphabet['i'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/i-triang-m.obj");
+	alphabet['k'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/k-triang-m.obj");
+	alphabet['n'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/n-triang-m.obj");
+	alphabet['o'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/o-triang-m.obj");
+	alphabet['p'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/p-triang-m.obj");
+	alphabet['r'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/r-triang-m.obj");
+	alphabet['s'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/s-triang-m.obj");
+	alphabet['t'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/t-triang-m.obj");
+	alphabet['u'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/u-triang-m.obj");
+	alphabet['x'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/x-triang-m.obj");
+	*/
 	glutTimerFunc(speed, update, 0);
 	glutTimerFunc(10, updateframe, 0);
 
