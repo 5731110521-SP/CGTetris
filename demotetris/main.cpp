@@ -125,6 +125,7 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 1, 1 ,0);
 		board.addblocks(block, 1, 2 ,0);
 		board.addblocks(block, 1, 3 ,0);
+		
 		//-----------------------------------
 	}
 	else if (oldChoose == 1) {				// -
@@ -132,6 +133,7 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 2, 2,0);
 		board.addblocks(block, 2, 3,0);
 		board.addblocks(block, 1, 1,0);
+		
 		//-----------------------------------
 	}
 	else if (oldChoose == 2) {				// --
@@ -139,24 +141,28 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 2, 1,0);
 		board.addblocks(block, 2, 2,0);
+		
 	}
 	else if (oldChoose == 3) {				//  -
 		board.addblocks(block, 1, 1,0);	// ---
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 1, 3,0);
 		board.addblocks(block, 2, 2,0);
+		
 	}
 	else if (oldChoose == 4) {				//  --
 		board.addblocks(block, 2, 2,0);	//--
 		board.addblocks(block, 2, 3,0);
 		board.addblocks(block, 1, 1,0);
 		board.addblocks(block, 1, 2,0);
+		
 	}
 	else if (oldChoose == 5) {				//--
 		board.addblocks(block, 2, 1,0);	//  --
 		board.addblocks(block, 2, 2,0);
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 1, 3,0);
+		
 	}
 	else if(oldChoose == 6){
 		board.addblocks(block, 2, 2,0);	//  -
@@ -169,7 +175,9 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 2, 1,0);	//  -
 		board.addblocks(block, 3, 1,0);	//  -
 		board.addblocks(block, 4, 1,0);	//  -
+		
 	}
+	if (!board.canmoveblock(1, 0, 0)) gameover = true;
 
 	if (choose == 0) { // ---
 
@@ -495,10 +503,10 @@ void DrawGameBoard() {
 					model.Draw();
 					glPopMatrix();
 				}
-                else if (pause) {
+                if (pause) {
                     glPushMatrix();
                     glColor3fv(white);
-                    glTranslatef(j*2-BOARD_X,-i*2+BOARD_Y, 0);    //calculate location
+                    glTranslatef(j*2-BOARD_X,-i*2+BOARD_Y, 2);    //calculate location
                     glPushMatrix();
                     glScalef(1.7,1.7,1.7);
                     if (i==8&&j==3) alphabet['p'].Draw();
@@ -509,6 +517,25 @@ void DrawGameBoard() {
                     glPopMatrix();
                     glPopMatrix();
                 }
+<<<<<<< HEAD
+=======
+                else if (gameover) {
+                    glPushMatrix();
+                    glColor3fv(white);
+                    glTranslatef(j*2-BOARD_X,-i*2+BOARD_Y, 2);    //calculate location
+                    //draw score
+                    glPushMatrix();
+                    glScalef(0.5,0.5,0.5);
+                    if (i==11&&j==2) alphabet['p'].Draw();
+                    else if (i==11&&j==3) alphabet['r'].Draw();
+                    else if (i==11&&j==4) alphabet['e'].Draw();
+                    else if (i==11&&j==5) alphabet['s'].Draw();
+                    else if (i==11&&j==6) alphabet['s'].Draw();
+                    glPopMatrix();
+                    if (i==11&&j==7) alphabet['x'].Draw();
+                    glPopMatrix();
+                }
+>>>>>>> origin/KMMerge
 			}
 		}
 	}
@@ -652,6 +679,21 @@ void updateframe(int value) {
             glutPostRedisplay();
         }
     }
+<<<<<<< HEAD
+=======
+    if (pressedX) {
+        dy-=0.5;
+        if(dy<=-60) {
+            pressedX = false;
+            pressedS = true;
+            glutPostRedisplay();
+			slot.clearNext();
+			slot.clearShift();
+			board.clean();
+			gameover = false;
+        }
+    }
+>>>>>>> origin/KMMerge
     glutPostRedisplay();
     glutTimerFunc(10, updateframe, 0);
 }

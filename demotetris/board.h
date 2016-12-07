@@ -13,7 +13,7 @@
 
 #define ROW 20
 #define COLUMN 10
-#define DEPTH 5
+#define DEPTH 1
 
 using namespace std;
 
@@ -50,6 +50,7 @@ public:
 	bool movedown();
 	void removeCurrent();
 	void update();
+	void clean();
 };
 
 #endif

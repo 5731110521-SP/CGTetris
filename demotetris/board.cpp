@@ -344,3 +344,18 @@ void Board::update()
 		}
 	}
 }
+
+void Board::clean()
+{
+	for (int i = 0; i < ROW; i++)for (int j = 0; j < COLUMN; j++)for (int k = 0; k < DEPTH; k++) {
+		board[i][j][k] = false;
+		boardCurrent[i][j][k] = false;
+		boardShadow[i][j][k] = false;
+	}
+	shadowrow.clear();
+	shadowcolumn.clear();
+	shadowDepth.clear();
+	currentRow.clear();
+	currentColumn.clear();
+	currentDepth.clear();
+}
