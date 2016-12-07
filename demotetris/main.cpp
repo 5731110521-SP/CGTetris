@@ -21,6 +21,7 @@
 #include "vec3f.h"
 #include "block.h"
 #include "board.h"
+#include "slot.h"
 
 using namespace std;
 
@@ -31,10 +32,13 @@ using namespace std;
 #define DEPTH 20
 
 Board board;
-int choose = -1;
+Slot slot;
+int choose;
 int current=0;
-int random = 0;
-vector<int> typeBlock = { 0,1,1,2,3,3,4,4,5,5,6,7 };
+int random;
+int prevType,nextType,keep=0,keepCurrent;
+bool pressedS = false;
+vector<int> typeBlock = { 0,1,2,3,4,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
 vector<Block> _blocks;
 Model_OBJ model;
@@ -49,7 +53,8 @@ GLfloat yellow[] = { 0.3,0.3,0 };
 GLfloat pink[] = { 0.5,0,0.5 };
 GLfloat purple[] = { 1,0,1 };
 GLfloat brown[] = { 0,1,1 };
-GLfloat gray[] = { 0.4,0.4,0.4 };
+GLfloat gray[] = { 0.1,0.1,0.1 };
+GLfloat white[] = { 1,1,1 };
 GLfloat shadow[] = { 0.7,0.7,0.7 };
 map<int,GLfloat*> col;
 int speed=1000; bool space=false;
@@ -66,60 +71,97 @@ float deltaAngle = 0.0; // additional angle change when dragging
 int isDragging = 0; // true when dragging
 int xDragStart = 0; // records the x-coordinate when dragging starts
 
-void createBlock(int random,Block block) {
-	if (random == 0) { // ---
+void randomBlock() {
+	srand(time(0));
+	random_shuffle(typeBlock.begin(), typeBlock.end());
+	random = rand() % typeBlock.size();
+	if (typeBlock[random] != choose) choose = typeBlock[random];
+	else choose = typeBlock[random / 2];
+}
+Block block, nextblock;
+void createBlock(int oldChoose) {
+	//----------------------------------------------------------------------
+	slot.clearNext();
+	block = nextblock;
+	randomBlock();
+	if (keep == 1 && !slot.isShiftEmpty()) {
+		keep = 0;
+		swap(keepCurrent, oldChoose);
+		oldChoose = choose;
+	}
+	nextblock = Block(col[choose]);
+	//----------------------------------------------------------------------
+	if (oldChoose == 0) { // ---
 		board.addblocks(block, 1, 3);
 		board.addblocks(block, 1, 4);
 		board.addblocks(block, 1, 5);
 		board.addblocks(block, 1, 6);
+		//-----------------------------------
+
 		board.currentPointRow = 0;
 		board.currentPointColumn = 3;
 	}
-	else if (random == 1) {				// -
+	else if (oldChoose == 1) {				// -
 		board.addblocks(block, 2, 1);	// ---
 		board.addblocks(block, 2, 2);
 		board.addblocks(block, 2, 3);
 		board.addblocks(block, 1, 1);
+		//-----------------------------------
+		
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
-	else if (random == 2) {				// --
+	else if (oldChoose == 2) {				// --
 		board.addblocks(block, 1, 1);	// --
 		board.addblocks(block, 1, 2);
 		board.addblocks(block, 2, 1);
 		board.addblocks(block, 2, 2);
+		//-----------------------------------------
+		
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
-	else if (random == 3) {				//  -
+	else if (oldChoose == 3) {				//  -
 		board.addblocks(block, 1, 1);	// ---
 		board.addblocks(block, 1, 2);
 		board.addblocks(block, 1, 3);
-		board.addblocks(block, 2, 3);
+		board.addblocks(block, 2, 2);
+		//-----------------------------------------
+		
+
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
-	else if (random == 4) {				//  --
+	else if (oldChoose == 4) {				//  --
 		board.addblocks(block, 2, 2);	//--
 		board.addblocks(block, 2, 3);
 		board.addblocks(block, 1, 1);
 		board.addblocks(block, 1, 2);
+		//------------------------------------
+		
+
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
-	else if (random == 5) {				//--
+	else if (oldChoose == 5) {				//--
 		board.addblocks(block, 2, 1);	//  --
 		board.addblocks(block, 2, 2);
 		board.addblocks(block, 1, 2);
 		board.addblocks(block, 1, 3);
+		//--------------------------------------
+		
+
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
-	else if(random == 6){
+	else if(oldChoose == 6){
 		board.addblocks(block, 2, 2);	//  -
 		board.addblocks(block, 2, 3);	//---
 		board.addblocks(block, 2, 4);
 		board.addblocks(block, 1, 4);
+		//------------------------------------
+
+
 		board.currentPointRow = 0;
 		board.currentPointColumn = 0;
 	}
@@ -128,13 +170,74 @@ void createBlock(int random,Block block) {
 		board.addblocks(block, 2, 1);	//  -
 		board.addblocks(block, 3, 1);	//  -
 		board.addblocks(block, 4, 1);	//  -
+		//--------------------------------------
+
 		board.currentPointRow = 1;
 		board.currentPointColumn = 0;
 	}
-//	board.addblocks(block, 0, 4);
-//	board.addblocks(block, 0, 5);
-//	board.addblocks(block, 1, 5);
-//	board.addblocks(block, 1, 6);
+
+	if (choose == 0) { // ---
+		
+		slot.addNext(nextblock, 1, 0);
+		slot.addNext(nextblock, 1, 1);
+		slot.addNext(nextblock, 1, 2);
+		slot.addNext(nextblock, 1, 3);
+		//-----------------------------------
+
+	}
+	else if (choose == 1) {				// -
+		
+		slot.addNext(nextblock, 2, 0);
+		slot.addNext(nextblock, 2, 1);
+		slot.addNext(nextblock, 2, 2);
+		slot.addNext(nextblock, 1, 0);
+		
+	}
+	else if (choose == 2) {				// --
+		
+		slot.addNext(nextblock, 1, 1);
+		slot.addNext(nextblock, 1, 2);
+		slot.addNext(nextblock, 2, 1);
+		slot.addNext(nextblock, 2, 2);
+		
+	}
+	else if (choose == 3) {				//  -
+		
+		slot.addNext(nextblock, 1, 0);	// ---
+		slot.addNext(nextblock, 1, 1);
+		slot.addNext(nextblock, 1, 2);
+		slot.addNext(nextblock, 2, 1);
+
+	}
+	else if (choose == 4) {				//  --
+		
+		slot.addNext(nextblock, 2, 1);	//--
+		slot.addNext(nextblock, 2, 2);
+		slot.addNext(nextblock, 1, 0);
+		slot.addNext(nextblock, 1, 1);
+
+	}
+	else if (choose == 5) {				//--
+		
+		slot.addNext(nextblock, 2, 0);	//  --
+		slot.addNext(nextblock, 2, 1);
+		slot.addNext(nextblock, 1, 1);
+		slot.addNext(nextblock, 1, 2);
+
+	}
+	else if (choose == 6) {
+		slot.addNext(nextblock, 2, 1);	//  -
+		slot.addNext(nextblock, 2, 2);	//---
+		slot.addNext(nextblock, 2, 3);
+		slot.addNext(nextblock, 1, 3);
+	}
+	else {
+		slot.addNext(nextblock, 1, 1);
+		slot.addNext(nextblock, 2, 1);
+		slot.addNext(nextblock, 3, 1);
+		slot.addNext(nextblock, 4, 1);
+	}
+
 	glutPostRedisplay();
 }
 void handleArrow(int key,int x,int y) {
@@ -146,13 +249,8 @@ void handleArrow(int key,int x,int y) {
 	}
 	if (key == GLUT_KEY_DOWN) {
 		if (!board.currentColumn.empty()) {
-			if (!board.movedown()) {
-				random_shuffle(typeBlock.begin(), typeBlock.end());
-				random = rand() % 12;
-				if (typeBlock[random] != choose) choose = typeBlock[random];
-				else choose = typeBlock[random / 2];
-				Block block = Block(col[choose]);
-				createBlock(choose, block);
+			if (!board.movedown()) { 
+				createBlock(choose);
 			}
 
 			board.update();
@@ -182,13 +280,17 @@ void handleKeypress(unsigned char key,int x,int y) {
 //    if (key == '.') deltaMove = 1.0;
 //	if (key == '\/') deltaMove = -1.0;
 	if (key == 's') {
-		random_shuffle(typeBlock.begin(), typeBlock.end());
-        random = rand() % 12;
-        if (typeBlock[random] != choose) choose = typeBlock[random];
-        else choose = typeBlock[random / 2];
-        Block block = Block(col[choose]);
-        createBlock(choose, block);
-		glutPostRedisplay();
+        if(!pressedS){
+            pressedS = true;
+			randomBlock();
+			nextblock = Block(col[choose]);
+
+            createBlock(choose);
+            glutPostRedisplay();
+        }
+	}
+	if (key == '\/') {
+		keep = 1;
 	}
 }
 void mouseButton(int button, int state, int x, int y) {
@@ -200,7 +302,6 @@ void mouseButton(int button, int state, int x, int y) {
 		else  { /* (state = GLUT_UP) */
 			angle += deltaAngle; // update camera turning angle
 			isDragging = 0; // no longer dragging
-//			xDragStart = -1;
 		}
 	}
 }
@@ -240,28 +341,41 @@ void initRendering() {
 	col[0]=red,col[1]=green,col[2]=blue,col[3]=yellow,
     col[4]=pink,col[5]=purple,col[6]=brown,col[7]=gray;
 }
+void DrawNext() {
+	Block b = nextblock;
+	for (int i = 0; i < DIM; i++) for(int j=0; j<DIM; j++)  {
+		if (slot.nextblock[i][j]) {
+			glPushMatrix();
+			Block b = slot.nextblocks[i][j];
+			glTranslatef(j * 2 + 17, -i * 2 + 17, 0);    //calculate location
+			glColor3f(b.color[0], b.color[1], b.color[2]);
+			model.Draw();
+			glPopMatrix();
+		}
+	}
+}
 void DrawBorder() {
     glBegin(GL_LINES);
     glEnd();
         //x*2-5,-y*2+17,0
         glBegin(GL_QUADS);
-        glColor3f(1,1,1);
-        glVertex3f(-6,18,-1);
-        glVertex3f(14,18,-1);
-        glVertex3f(14,-22,-1);
-        glVertex3f(-6,-22,-1);
+//        glColor3f(1,1,1);
+//        glVertex3f(-6,18,-1);
+//        glVertex3f(14,18,-1);
+//        glVertex3f(14,-22,-1);
+//        glVertex3f(-6,-22,-1);
         glEnd();
 
-        for(int i=0; i<20; i++) for(int j=0; j<10; j++) {
-            if(i==0||i==19||j==0||j==9) {
+        for(int i=0; i<=21; i++) for(int j=0; j<=11; j++) {
+            if(i==0||i==21||j==0||j==11) {
                 glPushMatrix();
-                Block b = Block(gray);
-                if(i==0) glTranslatef(j*2-5,19,0);
-                else if(i==19) glTranslatef(j*2-5,-23,0);
-                else if(j==0) glTranslatef(-7,-i*2+17,0);
-                else glTranslatef(15,-i*2+17,0);
+                Block b = Block(white);
+                if(i==0) glTranslatef(j*2-7,19,0);
+                else if(i==21) glTranslatef(j*2-7,-23,0);
+                else if(j==0) glTranslatef(-7,-i*2+19,0);
+                else if(j==11) glTranslatef(15,-i*2+19,0);
 //                b.drawCube('t');
-                glColor3f(yellow[0],yellow[1],yellow[2]);
+                glColor3f(b.color[0],b.color[1],b.color[2]);
                 model.Draw();
                 glPopMatrix();
             }
@@ -309,7 +423,7 @@ void drawScene() {
 	glLoadIdentity();
 
 	setUplighting();
-	glTranslatef(0,0,-70);
+	glTranslatef(0,0,-68);
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/watertexture.bmp");
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/crate.bmp");
 //	setUptexture("D:/_fang/year 3/cg/demotetris/texture/brick.bmp");
@@ -321,11 +435,12 @@ void drawScene() {
 			0.0,    1.0,    0);
 
 	DrawBorder();
+	DrawNext();
 	int k = 0,ish=0;
 	for (int i = 0; i < 20; i++) {
 		for (int j = 0; j < 10; j++) {
 			if (board.board[i][j] || board.boardCurrent[i][j]) {
-				cout << k<< " " <<i << " " << j << endl;
+//				cout << k<< " " <<i << " " << j << endl;
 				k++;
 				glPushMatrix();
 				Block b = board.blocks[i][j];
@@ -334,23 +449,25 @@ void drawScene() {
                 glColor3f(b.color[0],b.color[1],b.color[2]);
                 model.Draw();
 				glPopMatrix();
-				//shadow
-                glPushMatrix(); ish=i;  //i=row j=col
-				b = board.blocks[i][j];
-				while(!board.board[ish][j] && -ish*2+17>=-22) ish++;
-				b.color=gray;
-				glTranslatef(j*2-5,-ish*2+17,0);    //calculate location
-//				b.drawCube('c');
-                glColor3f(gray[0],gray[1],gray[2]);
-                model.Draw();
-				glPopMatrix();
             }
+            else if (board.boardShadow[i][j]) {
+				glPushMatrix();
+				Block b = Block(shadow);
+				glTranslatef(j * 2 - 5, -i * 2 + 17, 0);    //calculate location
+//				b.drawCube('c');
+				glColor3f(b.color[0], b.color[1], b.color[2]);
+				model.Draw();
+				glPopMatrix();
+			}
 		}
 	}
 
 	glutSwapBuffers();
 }
 void updatecam(void) {
+//     genType(){
+//
+//     }
 	if (deltaMove) { // update camera position
 		x += deltaMove * lx * 0.01;
 		y += deltaMove * ly * 0.01;
@@ -361,10 +478,8 @@ void update(int value) {
 	if (!board.currentColumn.empty()) {
         speed=(space)?10:1000;
 		if (!board.movedown()) {
-            space=false;
-            random = rand() % 5;
-			Block block = Block(col[random]);
-			createBlock(random, block);
+            space=false;          
+            createBlock(choose);
 		}
 
 		board.update();
@@ -377,7 +492,7 @@ void update(int value) {
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(400, 400);
+	glutInitWindowSize(600, 600);
 	glutCreateWindow("TETRIS ><");
 	initRendering();
 
@@ -394,7 +509,10 @@ int main(int argc, char** argv) {
 
 //	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
 	model.Load("model/cube-m.obj");
+<<<<<<< HEAD
 //	model.Load("model/cube.obj");
+=======
+>>>>>>> origin/KM
 //	t_model.Load("D:/_fang/year 3/cg/demotetris/model/t-tetris-m.obj");
 //	l_model.Load("D:/_fang/year 3/cg/demotetris/model/l-tetris-m.obj");
 //	t_model.Load("model/t-tetris-m.obj");
