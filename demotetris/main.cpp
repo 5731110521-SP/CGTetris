@@ -29,6 +29,8 @@
 #define HOME_Y 77
 #define NEXT_X 18
 #define NEXT_Y 17
+#define KEEP_X -18
+#define KEEP_Y 17
 
 using namespace std;
 
@@ -39,7 +41,7 @@ int current=0;
 int prevChoose;
 int random;
 int prevType,nextType,keepCurrent,keep=-1;
-bool pressedS = false,start=false,pause=false;
+bool pressedS = false,start=false,pause=false,gameover=false,pressedX=false;
 vector<int> typeBlock = { 0,1,2,3,4,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
 Model_OBJ model,number[10],wire;
@@ -125,7 +127,7 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 1, 1 ,0);
 		board.addblocks(block, 1, 2 ,0);
 		board.addblocks(block, 1, 3 ,0);
-		
+
 		//-----------------------------------
 	}
 	else if (oldChoose == 1) {				// -
@@ -133,7 +135,7 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 2, 2,0);
 		board.addblocks(block, 2, 3,0);
 		board.addblocks(block, 1, 1,0);
-		
+
 		//-----------------------------------
 	}
 	else if (oldChoose == 2) {				// --
@@ -141,28 +143,28 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 2, 1,0);
 		board.addblocks(block, 2, 2,0);
-		
+
 	}
 	else if (oldChoose == 3) {				//  -
 		board.addblocks(block, 1, 1,0);	// ---
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 1, 3,0);
 		board.addblocks(block, 2, 2,0);
-		
+
 	}
 	else if (oldChoose == 4) {				//  --
 		board.addblocks(block, 2, 2,0);	//--
 		board.addblocks(block, 2, 3,0);
 		board.addblocks(block, 1, 1,0);
 		board.addblocks(block, 1, 2,0);
-		
+
 	}
 	else if (oldChoose == 5) {				//--
 		board.addblocks(block, 2, 1,0);	//  --
 		board.addblocks(block, 2, 2,0);
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 1, 3,0);
-		
+
 	}
 	else if(oldChoose == 6){
 		board.addblocks(block, 2, 2,0);	//  -
@@ -175,7 +177,7 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 2, 1,0);	//  -
 		board.addblocks(block, 3, 1,0);	//  -
 		board.addblocks(block, 4, 1,0);	//  -
-		
+
 	}
 	if (!board.canmoveblock(1, 0, 0)) gameover = true;
 
@@ -280,18 +282,6 @@ void releaseSpecialKey(unsigned char key, int x, int y){
 void handleKeypress(unsigned char key,int x,int y) {
     if (key == 27) exit(0);
     if (key == 32) space=true;
-//    if (key == '-') deltaMove = 1.0;
-//	if (key == '=') deltaMove = -1.0;
-	/*if (key == 's') {
-        if(!pressedS){
-            pressedS = true;
-			randomBlock();
-			nextblock = Block(col[choose]);
-
-            createBlock(choose);
-            glutPostRedisplay();
-        }
-	}*/
 	if (key == 'k') {
 		if (!board.currentColumn.empty()) {
 			board.removeCurrent();
@@ -329,9 +319,9 @@ void handleKeypress(unsigned char key,int x,int y) {
 			glutPostRedisplay();
 		}
 	}
-	if (key == '\/') {
-		keep = 1;
-	}
+//	if (key == '\/') {
+//		keep = 1;
+//	}
 	if (key == 's') {
         if(!start) start = true;
 	}
@@ -407,6 +397,29 @@ void DrawNext() {
         else if(i==1) alphabet['e'].Draw();
         else if(i==2) alphabet['x'].Draw();
         else if(i==3) alphabet['t'].Draw();
+        glPopMatrix();
+	}
+}
+void DrawKeep() {
+	Block b = keepblock;
+	for (int i = 0; i < DIM; i++) for(int j=0; j<DIM; j++)  {
+		if (slot.shiftblock[i][j]) {
+			glPushMatrix();
+			Block b = slot.shiftblocks[i][j];
+			glTranslatef(j * 2 + KEEP_X, -i * 2 + KEEP_Y, 0);    //calculate location
+			glColor3f(b.color[0], b.color[1], b.color[2]);
+			model.Draw();
+			glPopMatrix();
+		}
+	}
+	for(int i=0; i<4; i++) {
+        glPushMatrix();
+        glColor3fv(white);
+        glTranslatef(i*2+KEEP_X,KEEP_Y-10,0);
+        if(i==0) alphabet['k'].Draw();
+        else if(i==1) alphabet['e'].Draw();
+        else if(i==2) alphabet['e'].Draw();
+        else if(i==3) alphabet['p'].Draw();
         glPopMatrix();
 	}
 }
@@ -517,8 +530,6 @@ void DrawGameBoard() {
                     glPopMatrix();
                     glPopMatrix();
                 }
-<<<<<<< HEAD
-=======
                 else if (gameover) {
                     glPushMatrix();
                     glColor3fv(white);
@@ -535,7 +546,6 @@ void DrawGameBoard() {
                     if (i==11&&j==7) alphabet['x'].Draw();
                     glPopMatrix();
                 }
->>>>>>> origin/KMMerge
 			}
 		}
 	}
@@ -679,8 +689,6 @@ void updateframe(int value) {
             glutPostRedisplay();
         }
     }
-<<<<<<< HEAD
-=======
     if (pressedX) {
         dy-=0.5;
         if(dy<=-60) {
@@ -693,7 +701,6 @@ void updateframe(int value) {
 			gameover = false;
         }
     }
->>>>>>> origin/KMMerge
     glutPostRedisplay();
     glutTimerFunc(10, updateframe, 0);
 }
@@ -730,9 +737,9 @@ int main(int argc, char** argv) {
 	glutMouseFunc(mouseButton);
 	glutMotionFunc(mouseMove);
 
-//	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
-	model.Load("model/cube-m.obj");
-	/*
+	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
+//	model.Load("model/cube-m.obj");
+//	/*
     number[0].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/0-triang-m.obj");
     number[1].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/1-triang-m.obj");
     number[2].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/2-triang-m.obj");
@@ -743,32 +750,32 @@ int main(int argc, char** argv) {
     number[7].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/7-triang-m.obj");
     number[8].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/8-triang-m.obj");
     number[9].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/9-triang-m.obj");
-	*/
-	number[0].Load("model/character_obj/0-triang-m.obj");
-	number[1].Load("model/character_obj/1-triang-m.obj");
-	number[2].Load("model/character_obj/2-triang-m.obj");
-	number[3].Load("model/character_obj/3-triang-m.obj");
-	number[4].Load("model/character_obj/4-triang-m.obj");
-	number[5].Load("model/character_obj/5-triang-m.obj");
-	number[6].Load("model/character_obj/6-triang-m.obj");
-	number[7].Load("model/character_obj/7-triang-m.obj");
-	number[8].Load("model/character_obj/8-triang-m.obj");
-	number[9].Load("model/character_obj/9-triang-m.obj");
-
-	alphabet['a'].Load("model/character_obj/a-triang-m.obj");
-	alphabet['c'].Load("model/character_obj/c-triang-m.obj");
-	alphabet['e'].Load("model/character_obj/e-triang-m.obj");
-	alphabet['i'].Load("model/character_obj/i-triang-m.obj");
-	alphabet['k'].Load("model/character_obj/k-triang-m.obj");
-	alphabet['n'].Load("model/character_obj/n-triang-m.obj");
-	alphabet['o'].Load("model/character_obj/o-triang-m.obj");
-	alphabet['p'].Load("model/character_obj/p-triang-m.obj");
-	alphabet['r'].Load("model/character_obj/r-triang-m.obj");
-	alphabet['s'].Load("model/character_obj/s-triang-m.obj");
-	alphabet['t'].Load("model/character_obj/t-triang-m.obj");
-	alphabet['u'].Load("model/character_obj/u-triang-m.obj");
-	alphabet['x'].Load("model/character_obj/x-triang-m.obj");
-	/*
+//	*/
+//	number[0].Load("model/character_obj/0-triang-m.obj");
+//	number[1].Load("model/character_obj/1-triang-m.obj");
+//	number[2].Load("model/character_obj/2-triang-m.obj");
+//	number[3].Load("model/character_obj/3-triang-m.obj");
+//	number[4].Load("model/character_obj/4-triang-m.obj");
+//	number[5].Load("model/character_obj/5-triang-m.obj");
+//	number[6].Load("model/character_obj/6-triang-m.obj");
+//	number[7].Load("model/character_obj/7-triang-m.obj");
+//	number[8].Load("model/character_obj/8-triang-m.obj");
+//	number[9].Load("model/character_obj/9-triang-m.obj");
+//
+//	alphabet['a'].Load("model/character_obj/a-triang-m.obj");
+//	alphabet['c'].Load("model/character_obj/c-triang-m.obj");
+//	alphabet['e'].Load("model/character_obj/e-triang-m.obj");
+//	alphabet['i'].Load("model/character_obj/i-triang-m.obj");
+//	alphabet['k'].Load("model/character_obj/k-triang-m.obj");
+//	alphabet['n'].Load("model/character_obj/n-triang-m.obj");
+//	alphabet['o'].Load("model/character_obj/o-triang-m.obj");
+//	alphabet['p'].Load("model/character_obj/p-triang-m.obj");
+//	alphabet['r'].Load("model/character_obj/r-triang-m.obj");
+//	alphabet['s'].Load("model/character_obj/s-triang-m.obj");
+//	alphabet['t'].Load("model/character_obj/t-triang-m.obj");
+//	alphabet['u'].Load("model/character_obj/u-triang-m.obj");
+//	alphabet['x'].Load("model/character_obj/x-triang-m.obj");
+//	/*
 	alphabet['a'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/a-triang-m.obj");
 	alphabet['c'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/c-triang-m.obj");
 	alphabet['e'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/e-triang-m.obj");
@@ -782,7 +789,7 @@ int main(int argc, char** argv) {
 	alphabet['t'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/t-triang-m.obj");
 	alphabet['u'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/u-triang-m.obj");
 	alphabet['x'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/x-triang-m.obj");
-	*/
+//	*/
 	glutTimerFunc(speed, update, 0);
 	glutTimerFunc(10, updateframe, 0);
 
