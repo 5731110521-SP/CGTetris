@@ -1,5 +1,10 @@
 ﻿  board.cpp
+<<<<<<< HEAD
 board.cpp(28): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 board.cpp(29): warning C4804: '<=': unsafe use of type 'bool' in operation
   CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.exe
   CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.pdb (Full PDB)
+=======
+  CGtetris.vcxproj -> D:\work\year3term1\cg\github\CGTetris\demotetris\Debug\CGtetris.exe
+  CGtetris.vcxproj -> D:\work\year3term1\cg\github\CGTetris\demotetris\Debug\CGtetris.pdb (Full PDB)
+>>>>>>> refs/remotes/origin/DA
