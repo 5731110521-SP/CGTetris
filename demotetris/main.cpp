@@ -42,18 +42,11 @@ int prevType,nextType,keepCurrent,keep=-1;
 bool pressedS = false,start=false,pause=false;
 vector<int> typeBlock = { 0,1,2,3,4,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
-<<<<<<< HEAD
-Model_OBJ model,number[10],wire;
-=======
 vector<Block> _blocks;
-
 Model_OBJ model;
-Model_OBJ num[10];
+Model_OBJ number[10],num[10], wire;
 
-int _axis,isStart=0;
-float _angle[3];
-GLfloat mat[16];
->>>>>>> refs/remotes/origin/DA
+int isStart=0;
 GLuint _textureId;
 GLfloat red[] = { 1,0,0 };
 GLfloat green[] = { 0,1,0 };
@@ -102,35 +95,8 @@ void createBlock(int oldChoose) {
 	}
 	else if(keep==1 && !slot.isShiftEmpty()){
 		keep = -1;
-	//	randomBlock();
-	//	nextblock = Block(col[choose]);
+
 	}
-
-//	if (keep == 1 && slot.isShiftEmpty()) {
-//		keep = -1;
-	//	keepCurrent = oldChoose;
-	//	oldChoose = choose;
-	//	keepBlock = block;
-	//	block = nextblock;
-	//	randomBlock();
-	//	nextblock = Block(col[choose]);
-	//	createBlock(oldChoose);
-//	}
-//	else if(keep == 1 && !slot.isShiftEmpty()){
-	//	keep = -1;
-	//	Block tmp = block;
-	//	block = keepBlock;
-	//	keepBlock = block;
-	//	int t = keepCurrent;
-	//	keepCurrent = oldChoose;
-	//	oldChoose = t;
-	//	createBlock(oldChoose);
-//	}
-
-	cout << "keepCurrent = " << keepCurrent << endl;
-	cout << "prevChosse = " << prevChoose << endl;
-	cout << "oldchoose = " << oldChoose << endl;
-	cout << "choose = " << choose << endl;
 	//----------------------------------------------------------------------
 	if (oldChoose == 0) { // ---
 		board.addblocks(block, 1, 0 ,0);
@@ -244,7 +210,71 @@ void createBlock(int oldChoose) {
 		slot.addNext(nextblock, 3, 1);
 		slot.addNext(nextblock, 4, 1);
 	}
+	
+	/*
+	if (keepCurrent == 0) { // ---
 
+	slot.addShift(keepBlock, 1, 0);
+	slot.addShift(keepBlock, 1, 1);
+	slot.addShift(keepBlock, 1, 2);
+	slot.addShift(keepBlock, 1, 3);
+	//-----------------------------------
+
+	}
+	else if (keepCurrent == 1) {				// -
+
+	slot.addShift(keepBlock, 2, 0);
+	slot.addShift(keepBlock, 2, 1);
+	slot.addShift(keepBlock, 2, 2);
+	slot.addShift(keepBlock, 1, 0);
+
+	}
+	else if (keepCurrent == 2) {				// --
+
+	slot.addShift(keepBlock, 1, 1);
+	slot.addShift(keepBlock, 1, 2);
+	slot.addShift(keepBlock, 2, 1);
+	slot.addShift(keepBlock, 2, 2);
+
+	}
+	else if (keepCurrent == 3) {				//  -
+
+	slot.addShift(keepBlock, 1, 0);	// ---
+	slot.addShift(keepBlock, 1, 1);
+	slot.addShift(keepBlock, 1, 2);
+	slot.addShift(keepBlock, 2, 1);
+
+	}
+	else if (keepCurrent == 4) {				//  --
+
+	slot.addShift(keepBlock, 2, 1);	//--
+	slot.addShift(keepBlock, 2, 2);
+	slot.addShift(keepBlock, 1, 0);
+	slot.addShift(keepBlock, 1, 1);
+
+	}
+	else if (keepCurrent == 5) {				//--
+
+	slot.addShift(keepBlock, 2, 0);	//  --
+	slot.addShift(keepBlock, 2, 1);
+	slot.addShift(keepBlock, 1, 1);
+	slot.addShift(keepBlock, 1, 2);
+
+	}
+	else if (keepCurrent == 6) {
+	slot.addShift(keepBlock, 2, 1);	//  -
+	slot.addShift(keepBlock, 2, 2);	//---
+	slot.addShift(keepBlock, 2, 3);
+	slot.addShift(keepBlock, 1, 3);
+	}
+	else {
+	slot.addShift(keepBlock, 1, 1);
+	slot.addShift(keepBlock, 2, 1);
+	slot.addShift(keepBlock, 3, 1);
+	slot.addShift(keepBlock, 4, 1);
+	}*/
+	
+	
 	glutPostRedisplay();
 }
 void handleArrow(int key,int x,int y) {
@@ -283,17 +313,10 @@ void releaseSpecialKey(unsigned char key, int x, int y){
 }
 void handleKeypress(unsigned char key,int x,int y) {
     if (key == 27) exit(0);
-    if (key == 32) space=true;
-<<<<<<< HEAD
+    if (key == 32 && isStart == 1) space=true;
 //    if (key == '-') deltaMove = 1.0;
 //	if (key == '=') deltaMove = -1.0;
 	/*if (key == 's') {
-=======
-//    if (key == '.') deltaMove = 1.0;
-//	if (key == '\/') deltaMove = -1.0;
-	if (key == 's') {
-		isStart = 1;
->>>>>>> refs/remotes/origin/DA
         if(!pressedS){
             pressedS = true;
 			randomBlock();
@@ -344,7 +367,10 @@ void handleKeypress(unsigned char key,int x,int y) {
 		keep = 1;
 	}
 	if (key == 's') {
-        if(!start) start = true;
+		if (!start&&isStart==0) {
+			isStart = 1;
+			start = true;
+		}
 	}
 	if (key == 'p') {
         pause = !pause;
@@ -433,9 +459,8 @@ void DrawBorder(GLfloat *color,char *type) {
 	   // else if(j==0) glTranslatef(-7,-i*2+19,0);
 	   // else if(j==11) glTranslatef(15,-i*2+19,0);
 //                b.drawCube('t');
-<<<<<<< HEAD
-				//glColor3f(b.color[0],b.color[1],b.color[2]);
-				//model.Draw();
+		//glColor3f(b.color[0],b.color[1],b.color[2]);
+		//model.Draw();
 
 		glLineWidth(0.5);
 		glColor3f(gray[0], gray[1], gray[2]);
@@ -593,13 +618,7 @@ void DrawHome() {
             else if (i==9&&j==8) model.Draw();
             glPopMatrix();
         //----------------------------------------------------
-=======
-                glColor3f(b.color[0],b.color[1],b.color[2]);
-                model.Draw();
-				glPopMatrix();
 
-            }
->>>>>>> refs/remotes/origin/DA
         }
     }
 }
@@ -668,49 +687,16 @@ void drawScene() {
 //	setUptexture("texture/brick.bmp");
 
     gluLookAt(
-<<<<<<< HEAD
 		x, 1, z,               //camera location @ (x,1,z)
 		x - lx, 1, z - lz,               // looking along vector (lx,1,lz)
 		0, 1, 0);              // with up vector (0,1,0)
-=======
-			x,      1,      y,
-			x - lx, 1, y-ly,
-			0.0,    1.0,    0);
->>>>>>> refs/remotes/origin/DA
 
 	DrawGameBoard();
 	DrawHome();
 	DrawNext();
-<<<<<<< HEAD
 
-=======
-	int k = 0,ish=0;
-	for (int i = 0; i < 20; i++) {
-		for (int j = 0; j < 10; j++) {
-			if (board.board[i][j] || board.boardCurrent[i][j]) {
-//				cout << k<< " " <<i << " " << j << endl;
-				k++;
-				glPushMatrix();
-				Block b = board.blocks[i][j];
-				glTranslatef(j*2-5,-i*2+17,0);    //calculate location
-//				b.drawCube('c');
-                glColor3f(b.color[0],b.color[1],b.color[2]);
-                model.Draw();
-				glPopMatrix();
-            }
-            else if (board.boardShadow[i][j]) {
-				glPushMatrix();
-				Block b = Block(shadow);
-				glTranslatef(j * 2 - 5, -i * 2 + 17, 0);    //calculate location
-//				b.drawCube('c');
-				glColor3f(b.color[0], b.color[1], b.color[2]);
-				model.Draw();
-				glPopMatrix();
-			}
-		}
-	}
 	if(isStart) showScore();
->>>>>>> refs/remotes/origin/DA
+
 	glutSwapBuffers();
 }
 void updatecam(void) {
@@ -720,7 +706,7 @@ void updatecam(void) {
 	}
 	glutPostRedisplay(); // redisplay everything
 }
-<<<<<<< HEAD
+
 void updateframe(int value) {
     if (start) {
         dy+=0.5;
@@ -736,14 +722,9 @@ void updateframe(int value) {
     glutPostRedisplay();
     glutTimerFunc(10, updateframe, 0);
 }
-void update(int value) {
-	if (!pause&&!board.currentColumn.empty()) {
-=======
 
 void update(int value) {
-	
-	if (!board.currentColumn.empty()) {
->>>>>>> refs/remotes/origin/DA
+	if (!pause&&!board.currentColumn.empty()) {
         speed=(space)?10:1000;
 		if (!board.movedown()) {
             space=false;
@@ -777,7 +758,7 @@ int main(int argc, char** argv) {
 
 //	model.Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/cube-m.obj");
 	model.Load("model/cube-m.obj");
-<<<<<<< HEAD
+
 	/*
     number[0].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/0-triang-m.obj");
     number[1].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/1-triang-m.obj");
@@ -829,11 +810,7 @@ int main(int argc, char** argv) {
 	alphabet['u'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/u-triang-m.obj");
 	alphabet['x'].Load("D:/_fang/year 3/cg/CGTetris/demotetris/model/character_obj/x-triang-m.obj");
 	*/
-=======
-//	t_model.Load("D:/_fang/year 3/cg/demotetris/model/t-tetris-m.obj");
-//	l_model.Load("D:/_fang/year 3/cg/demotetris/model/l-tetris-m.obj");
-//	t_model.Load("model/t-tetris-m.obj");
-//	l_model.Load("model/l-tetris-m.obj");
+
 	num[0].Load("model/0.obj");
 	num[1].Load("model/1.obj");
 	num[2].Load("model/2.obj");
@@ -845,7 +822,6 @@ int main(int argc, char** argv) {
 	num[8].Load("model/8.obj");
 	num[9].Load("model/9.obj");
 
->>>>>>> refs/remotes/origin/DA
 	glutTimerFunc(speed, update, 0);
 	glutTimerFunc(10, updateframe, 0);
 

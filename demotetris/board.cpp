@@ -329,7 +329,16 @@ void Board::update()
 		
 
 		if (all) {
-<<<<<<< HEAD
+
+			//if (isLastHit) {
+			combo++;
+		//score = combo + score;
+		//}
+		//else {
+		//	combo = 1;
+		//	score++;
+		//}
+		isHit = true;
 			for (int j = 0; j < COLUMN; j++) {
 				for (int l = 0; l < DEPTH; l++) {
 					board[i][j][l] = false;
@@ -342,28 +351,6 @@ void Board::update()
 						else {
 							board[k + 1][j][l] = false;
 						}
-=======
-			//if (isLastHit) {
-				combo++;
-				//score = combo + score;
-			//}
-			//else {
-			//	combo = 1;
-			//	score++;
-			//}
-			isHit = true;
-
-			for (int j = 0; j < 10; j++) {
-				board[i][j] = false;
-				for (int k = i - 1; k >= 0; k--) {
-					if (board[k][j]) {
-						board[k][j] = false;
-						board[k + 1][j] = true;
-						blocks[k + 1][j] = blocks[k][j];
-					}
-					else {
-						board[k + 1][j] = false;
->>>>>>> refs/remotes/origin/DA
 					}
 				}
 			}
