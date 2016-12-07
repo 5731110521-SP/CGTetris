@@ -3,6 +3,10 @@
 #include "block.h"
 #include "vec3f.h"
 
+
+int randomColumn = 0;
+int randomDepth = 0;
+
 using namespace std;
 
 Board::Board() {
@@ -20,16 +24,26 @@ Board::Board() {
 
 void Board::addblocks(Block b, int row, int column,int depth)
 {
-	boardCurrent[row][column][depth] = true;
-	blocks[row][column][depth] = b;
-	currentRow.push_back(row);
-	currentColumn.push_back(column);
-	currentDepth.push_back(depth);
+	if (currentColumn.empty()) {
+		srand(time(0));
+		if (!COLUMN <= 4) randomColumn = rand() % (COLUMN - 4);
+		else randomColumn = 0;
+		randomDepth = rand() % DEPTH;
 
-	boardShadow[row][column][depth] =true;
+		currentPointRow = 0;
+		currentPointColumn = randomColumn;
+		currentPointDepth = randomDepth;
+	}
+	boardCurrent[row][column+randomColumn][depth + randomDepth] = true;
+	blocks[row][column+randomColumn][depth + randomDepth] = b;
+	currentRow.push_back(row);
+	currentColumn.push_back(column + randomColumn);
+	currentDepth.push_back(depth + randomDepth);
+
+	boardShadow[row][column+randomColumn][depth + randomDepth] =true;
 	shadowrow.push_back(row);
-	shadowcolumn.push_back(column);
-	shadowDepth.push_back(depth);
+	shadowcolumn.push_back(column + randomColumn);
+	shadowDepth.push_back(depth + randomDepth);
 
 	if (shadowcolumn.size() == 4) {
 		while (movedownShadow());
