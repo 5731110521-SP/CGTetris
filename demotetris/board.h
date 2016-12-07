@@ -21,9 +21,10 @@ class Board {
 public:
 	bool board[ROW][COLUMN][DEPTH]; //have something on board?
 	bool boardCurrent[ROW][COLUMN][DEPTH];
-
 	bool boardShadow[ROW][COLUMN][DEPTH];
 	Block blocks[ROW][COLUMN][DEPTH]; //blocks on the board
+	bool isLastHit = false,isHit;
+	int digit1=0,digit2=0,combo=1,score =0;
 	int currentPointRow;
 	int currentPointColumn;
 	int currentPointDepth;
@@ -41,6 +42,8 @@ public:
 	void addblocks(Block b, int row, int column,int depth);
 	bool canmoveblock(int row, int column, int depth);
 	void moveblock(int column,int depth);
+	void getScore();
+
 
 	bool canmoveShadow(int row, int column);
 	bool movedownShadow();
