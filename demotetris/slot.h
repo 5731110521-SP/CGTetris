@@ -10,6 +10,7 @@ public:
 	bool shiftblock[DIM][DIM];
 	Block nextblocks[DIM][DIM];
 	Block shiftblocks[DIM][DIM];
+	bool isEmpty;
 
 	Slot();
 
