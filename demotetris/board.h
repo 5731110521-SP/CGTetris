@@ -18,7 +18,8 @@ public:
 	bool board[20][10]; //have something on board?
 	bool boardCurrent[20][10];
 
-	int digit1=0,digit2=0;
+	bool isLastHit = false,isHit;
+	int digit1=0,digit2=0,combo=1,score =0;
 	bool boardShadow[20][10];
 	Block blocks[20][10]; //blocks on the board
 	int currentPointRow;

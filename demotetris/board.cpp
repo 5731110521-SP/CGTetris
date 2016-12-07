@@ -262,16 +262,18 @@ void Board::update()
 				break;
 			}
 		}
-		if (all) {
-			
-			if (digit2 < 9) {
-				digit2++;
-			}
-			else {
-				digit2 = 0;
-				digit1++;
-			}
+		
 
+		if (all) {
+			//if (isLastHit) {
+				combo++;
+				//score = combo + score;
+			//}
+			//else {
+			//	combo = 1;
+			//	score++;
+			//}
+			isHit = true;
 
 			for (int j = 0; j < 10; j++) {
 				board[i][j] = false;
@@ -289,4 +291,16 @@ void Board::update()
 
 		}
 	}
+
+	if (!isHit) {
+		combo = 0;
+	}
+	else {
+		score = combo + score;
+	}
+	digit2 = score%10;
+	digit1 = (score % 100)/10;
+			
+	isLastHit = isHit;
+	isHit = false;
 }

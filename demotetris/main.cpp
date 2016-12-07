@@ -83,6 +83,7 @@ void randomBlock() {
 }
 Block block, nextblock;
 void createBlock(int oldChoose) {
+
 	//----------------------------------------------------------------------
 	slot.clearNext();
 	block = nextblock;
@@ -505,9 +506,9 @@ void update(int value) {
 		if (!board.movedown()) {
             space=false;          
             createBlock(choose);
+			board.update();
 		}
 
-		board.update();
 
 		glutPostRedisplay();
 	}
