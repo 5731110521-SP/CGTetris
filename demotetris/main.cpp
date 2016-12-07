@@ -155,7 +155,10 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 4, 1,0);	//  -
 		
 	}
-	if (!board.canmoveblock(1, 0, 0)) gameover = true;
+	if (!board.canmoveblock(1, 0, 0)) {
+		isStart = 0;
+		gameover = true;
+	}
 
 	if (choose == 0) { // ---
 
@@ -381,7 +384,7 @@ void handleKeypress(unsigned char key,int x,int y) {
 		}
 	}
 	if (key == 'x') {
-        if(!pressedX) pressedX = true;
+        if(!pressedX&&gameover&&isStart==0) pressedX = true;
 	}
 	if (key == 'p') {
         pause = !pause;
@@ -739,7 +742,7 @@ void updateframe(int value) {
         dy+=0.5;
         if(dy>=0) {
             start=false;
-            pressedS = true;
+            pressedS = false;
 			randomBlock();
 			nextblock = Block(col[choose]);
             createBlock(choose);
@@ -755,6 +758,10 @@ void updateframe(int value) {
 			slot.clearNext();
 			slot.clearShift();
 			board.clean();
+			board.digit1 = 0; 
+			board.digit2 = 0;
+			board.combo = 1;
+			board.score = 0;
 			gameover = false;
         }
     }
