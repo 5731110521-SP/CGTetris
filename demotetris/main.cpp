@@ -120,14 +120,11 @@ void createBlock(int oldChoose) {
 	cout << "choose = " << choose << endl;
 	//----------------------------------------------------------------------
 	if (oldChoose == 0) { // ---
+		board.addblocks(block, 1, 0 ,0);
+		board.addblocks(block, 1, 1 ,0);
+		board.addblocks(block, 1, 2 ,0);
 		board.addblocks(block, 1, 3 ,0);
-		board.addblocks(block, 1, 4 ,0);
-		board.addblocks(block, 1, 5 ,0);
-		board.addblocks(block, 1, 6 ,0);
 		//-----------------------------------
-
-		board.currentPointRow = 0;
-		board.currentPointColumn = 3;
 	}
 	else if (oldChoose == 1) {				// -
 		board.addblocks(block, 2, 1,0);	// ---
@@ -135,73 +132,42 @@ void createBlock(int oldChoose) {
 		board.addblocks(block, 2, 3,0);
 		board.addblocks(block, 1, 1,0);
 		//-----------------------------------
-		
-		board.currentPointRow = 0;
-		board.currentPointColumn = 0;
 	}
 	else if (oldChoose == 2) {				// --
 		board.addblocks(block, 1, 1,0);	// --
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 2, 1,0);
 		board.addblocks(block, 2, 2,0);
-		//-----------------------------------------
-		
-		board.currentPointRow = 0;
-		board.currentPointColumn = 0;
 	}
 	else if (oldChoose == 3) {				//  -
 		board.addblocks(block, 1, 1,0);	// ---
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 1, 3,0);
 		board.addblocks(block, 2, 2,0);
-		//-----------------------------------------
-		
-
-		board.currentPointRow = 0;
-		board.currentPointColumn = 0;
 	}
 	else if (oldChoose == 4) {				//  --
 		board.addblocks(block, 2, 2,0);	//--
 		board.addblocks(block, 2, 3,0);
 		board.addblocks(block, 1, 1,0);
 		board.addblocks(block, 1, 2,0);
-		//------------------------------------
-		
-
-		board.currentPointRow = 0;
-		board.currentPointColumn = 0;
 	}
 	else if (oldChoose == 5) {				//--
 		board.addblocks(block, 2, 1,0);	//  --
 		board.addblocks(block, 2, 2,0);
 		board.addblocks(block, 1, 2,0);
 		board.addblocks(block, 1, 3,0);
-		//--------------------------------------
-		
-
-		board.currentPointRow = 0;
-		board.currentPointColumn = 0;
 	}
 	else if(oldChoose == 6){
 		board.addblocks(block, 2, 2,0);	//  -
 		board.addblocks(block, 2, 3,0);	//---
 		board.addblocks(block, 2, 4,0);
 		board.addblocks(block, 1, 4,0);
-		//------------------------------------
-
-
-		board.currentPointRow = 0;
-		board.currentPointColumn = 0;
 	}
 	else {
 		board.addblocks(block, 1, 1,0);	//  -
 		board.addblocks(block, 2, 1,0);	//  -
 		board.addblocks(block, 3, 1,0);	//  -
 		board.addblocks(block, 4, 1,0);	//  -
-		//--------------------------------------
-
-		board.currentPointRow = 1;
-		board.currentPointColumn = 0;
 	}
 
 	if (choose == 0) { // ---
