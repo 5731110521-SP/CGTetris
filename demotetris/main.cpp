@@ -32,8 +32,9 @@ Board board;
 Slot slot;
 int choose;
 int current=0;
+int prevChoose;
 int random;
-int prevType,nextType,keep=0,keepCurrent;
+int prevType,nextType,keepCurrent,keep=-1;
 bool pressedS = false;
 vector<int> typeBlock = { 0,1,2,3,4,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
@@ -75,18 +76,48 @@ void randomBlock() {
 	if (typeBlock[random] != choose) choose = typeBlock[random];
 	else choose = typeBlock[random / 2];
 }
-Block block, nextblock;
+
+Block block, nextblock,keepBlock;
 void createBlock(int oldChoose) {
 	//----------------------------------------------------------------------
 	slot.clearNext();
-	block = nextblock;
-	randomBlock();
-	if (keep == 1 && !slot.isShiftEmpty()) {
-		keep = 0;
-		swap(keepCurrent, oldChoose);
-		oldChoose = choose;
+	if (keep != 1) {
+		prevChoose = oldChoose;
+		block = nextblock;
+		randomBlock();
+		nextblock = Block(col[choose]);
 	}
-	nextblock = Block(col[choose]);
+	else if(keep==1 && !slot.isShiftEmpty()){
+		keep = -1;
+	//	randomBlock();
+	//	nextblock = Block(col[choose]);
+	}
+
+//	if (keep == 1 && slot.isShiftEmpty()) {
+//		keep = -1;
+	//	keepCurrent = oldChoose;
+	//	oldChoose = choose;
+	//	keepBlock = block;
+	//	block = nextblock;
+	//	randomBlock();
+	//	nextblock = Block(col[choose]);
+	//	createBlock(oldChoose);
+//	}
+//	else if(keep == 1 && !slot.isShiftEmpty()){
+	//	keep = -1;
+	//	Block tmp = block;
+	//	block = keepBlock;
+	//	keepBlock = block;
+	//	int t = keepCurrent;
+	//	keepCurrent = oldChoose;
+	//	oldChoose = t;
+	//	createBlock(oldChoose);
+//	}
+
+	cout << "keepCurrent = " << keepCurrent << endl;
+	cout << "prevChosse = " << prevChoose << endl;
+	cout << "oldchoose = " << oldChoose << endl;
+	cout << "choose = " << choose << endl;
 	//----------------------------------------------------------------------
 	if (oldChoose == 0) { // ---
 		board.addblocks(block, 1, 3 ,0);
@@ -286,8 +317,28 @@ void handleKeypress(unsigned char key,int x,int y) {
             glutPostRedisplay();
         }
 	}
-	if (key == '\/') {
-		keep = 1;
+	if (key == 'k') {
+		board.removeCurrent();
+		if (slot.isShiftEmpty()) {
+			keepCurrent = prevChoose;
+			keepBlock = block;
+			for (int i = 0; i < DIM; i++) for (int j = 0; j < DIM; j++) {
+				slot.shiftblock[i][j] = true;
+			}
+			createBlock(choose);
+		}
+		else if (!slot.isShiftEmpty()) {
+			Block tmp = block;
+			block = keepBlock;
+			keepBlock = tmp;
+			int t = keepCurrent;
+			cout << "kc = " << t << endl;
+			cout << "pv = " << prevChoose << endl;
+			keepCurrent = prevChoose;
+			prevChoose = t;
+			keep = 1;
+			createBlock(prevChoose);
+		}
 	}
 	if (key == 'a') {
 		if (!board.currentColumn.empty()) {

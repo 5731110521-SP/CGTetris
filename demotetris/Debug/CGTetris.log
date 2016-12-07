@@ -1,24 +1,3 @@
-﻿  main.cpp
-main.cpp(49): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
-main.cpp(49): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
-main.cpp(53): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
-main.cpp(53): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
-main.cpp(55): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
-main.cpp(55): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
-main.cpp(72): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-main.cpp(272): warning C4129: '/': unrecognized character escape sequence
-main.cpp(289): warning C4129: '/': unrecognized character escape sequence
-main.cpp(320): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-main.cpp(359): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(393): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(394): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(395): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(396): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(397): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(398): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(472): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(483): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-main.cpp(500): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-main.cpp(501): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-  CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.exe
-  CGtetris.vcxproj -> E:\workspace\CG\CGTetris\demotetris\Debug\CGtetris.pdb (Full PDB)
+﻿vec3f.obj : warning LNK4020: a type record in 'e:\workspace\cg\cgtetris\demotetris\debug\vc140.pdb' is corrupted; some symbols and types may not be accessible from the debugger
+modelloader.obj : warning LNK4020: a type record in 'e:\workspace\cg\cgtetris\demotetris\debug\vc140.pdb' is corrupted; some symbols and types may not be accessible from the debugger
+imageloader.obj : fatal error LNK1103: debugging information corrupt; recompile module
