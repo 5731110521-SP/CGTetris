@@ -41,8 +41,11 @@ bool pressedS = false;
 vector<int> typeBlock = { 0,1,2,3,4,5,6,7 };
 //int typeBlock[] = {0,1,1,2,3,3,4,4,5,5,6,7};
 vector<Block> _blocks;
+
 Model_OBJ model;
-int _axis;
+Model_OBJ num[10];
+
+int _axis,isStart=0;
 float _angle[3];
 GLfloat mat[16];
 GLuint _textureId;
@@ -280,6 +283,7 @@ void handleKeypress(unsigned char key,int x,int y) {
 //    if (key == '.') deltaMove = 1.0;
 //	if (key == '\/') deltaMove = -1.0;
 	if (key == 's') {
+		isStart = 1;
         if(!pressedS){
             pressedS = true;
 			randomBlock();
@@ -377,7 +381,8 @@ void DrawBorder() {
 //                b.drawCube('t');
                 glColor3f(b.color[0],b.color[1],b.color[2]);
                 model.Draw();
-                glPopMatrix();
+				glPopMatrix();
+
             }
         }
 }
@@ -417,6 +422,24 @@ void setUplighting() {
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
 	glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
 }
+
+void showScore() {
+
+	glScalef(0.7, 0.7, 0.7);
+	Block bb = Block(white);
+	glColor3f(bb.color[0], bb.color[1], bb.color[2]);
+	
+	glPushMatrix();
+	glTranslatef(28 , 28, 0);
+	num[board.digit1].Draw();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(34, 28, 0);
+	num[board.digit2].Draw();
+	glPopMatrix();
+
+}
 void drawScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
@@ -431,7 +454,7 @@ void drawScene() {
 
     gluLookAt(
 			x,      1,      y,
-			x + lx, 1, y+ly,
+			x - lx, 1, y-ly,
 			0.0,    1.0,    0);
 
 	DrawBorder();
@@ -461,7 +484,7 @@ void drawScene() {
 			}
 		}
 	}
-
+	if(isStart) showScore();
 	glutSwapBuffers();
 }
 void updatecam(void) {
@@ -474,7 +497,9 @@ void updatecam(void) {
 	}
 	glutPostRedisplay(); // redisplay everything
 }
+
 void update(int value) {
+	
 	if (!board.currentColumn.empty()) {
         speed=(space)?10:1000;
 		if (!board.movedown()) {
@@ -513,6 +538,16 @@ int main(int argc, char** argv) {
 //	l_model.Load("D:/_fang/year 3/cg/demotetris/model/l-tetris-m.obj");
 //	t_model.Load("model/t-tetris-m.obj");
 //	l_model.Load("model/l-tetris-m.obj");
+	num[0].Load("model/0.obj");
+	num[1].Load("model/1.obj");
+	num[2].Load("model/2.obj");
+	num[3].Load("model/3.obj");
+	num[4].Load("model/4.obj");
+	num[5].Load("model/5.obj");
+	num[6].Load("model/6.obj");
+	num[7].Load("model/7.obj");
+	num[8].Load("model/8.obj");
+	num[9].Load("model/9.obj");
 
 	glutTimerFunc(speed, update, 0);
 

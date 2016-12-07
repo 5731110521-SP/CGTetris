@@ -2,8 +2,10 @@
 #include "board.h"
 #include "block.h"
 #include "vec3f.h"
+#include "modelloader.h"
 
 using namespace std;
+
 
 Board::Board() {
 	for (int i = 0; i < 20; i++) for (int j = 0; j < 10; j++) {
@@ -261,6 +263,16 @@ void Board::update()
 			}
 		}
 		if (all) {
+			
+			if (digit2 < 9) {
+				digit2++;
+			}
+			else {
+				digit2 = 0;
+				digit1++;
+			}
+
+
 			for (int j = 0; j < 10; j++) {
 				board[i][j] = false;
 				for (int k = i - 1; k >= 0; k--) {

@@ -18,6 +18,7 @@ public:
 	bool board[20][10]; //have something on board?
 	bool boardCurrent[20][10];
 
+	int digit1=0,digit2=0;
 	bool boardShadow[20][10];
 	Block blocks[20][10]; //blocks on the board
 	int currentPointRow;
@@ -28,6 +29,9 @@ public:
 	vector<int> currentColumn;
 
 	Board();
+
+
+	void getScore();
 
 	void addblocks(Block b, int row, int column);
 	bool onCurrent(int row, int column);
