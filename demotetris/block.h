@@ -4,26 +4,16 @@
 #include <GL/glut.h>
 #include "vec3f.h"
 #include "modelloader.h"
-class Block{
-    public :
-        char type;
-        Vec3f pos;
-        Vec3f angle;
-        GLfloat *color;
-        Model_OBJ model;
+class Block {
+public:
+	GLfloat *color;
 
-    public:
-        Block();
-        Block(char type,GLfloat *color,Vec3f pos,Vec3f angle,Model_OBJ model);
-        ~Block();
+public:
+	Block();
+	Block(GLfloat *color);
 
-        void addPos(Vec3f pos);
-        void addAngle(char axis,float angle);
-
-        void drawRect(char type,float a,float rx,float ry,float rz);
-        void drawCube(char type,float tx,float ty,float tz);
-        void drawBlockTexture(Block b);
-        void drawBlockModel(Block b);
+	void drawRect(char type, float a, float rx, float ry, float rz);
+	void drawCube(char type);
 };
 
 #endif
