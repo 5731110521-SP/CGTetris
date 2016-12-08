@@ -297,7 +297,7 @@ void createBlock(int oldChoose) {
 	slot.addShift(keepBlock, 2, 3);
 	slot.addShift(keepBlock, 1, 3);
 	}
-	else if (keepCurrent == 7) {
+	else {
 	slot.addShift(keepBlock, 1, 1);
 	slot.addShift(keepBlock, 2, 1);
 	slot.addShift(keepBlock, 3, 1);
@@ -358,8 +358,8 @@ void handleKeypress(unsigned char key,int x,int y) {
 				block = keepBlock;
 				keepBlock = tmp;
 				int t = keepCurrent;
-//				cout << "kc = " << t << endl;
-//				cout << "pv = " << prevChoose << endl;
+				cout << "kc = " << t << endl;
+				cout << "pv = " << prevChoose << endl;
 				keepCurrent = prevChoose;
 				prevChoose = t;
 				keep = 1;
@@ -758,11 +758,11 @@ void updateframe(int value) {
         if(dy<=-60) {
             pressedX = false;
             pressedS = true;
+            glutPostRedisplay();
 			slot.clearNext();
 			slot.clearShift();
 			board.clean();
 			gameover = false;
-			glutPostRedisplay();
         }
     }
     glutPostRedisplay();
